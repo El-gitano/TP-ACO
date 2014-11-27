@@ -11,7 +11,8 @@ public final class ClientEditeur
 	public static void main(String[] args) {
 		
 		final MoteurImplementation moteur = new MoteurImplementation();
-		final IHM ihm = new IHM(moteur);
+		final Enregistreur enregistreur = new Enregistreur();
+		final IHM ihm = new IHM(moteur, enregistreur);
 		moteur.getBuffer().ajouterObservateur(ihm);
 	}
 }

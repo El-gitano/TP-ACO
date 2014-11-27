@@ -7,8 +7,11 @@ import javax.swing.text.DocumentFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.InsererTexte;
 import fr.istic.foucaultbertier.aco.commandes.SupprimerTexte;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.InsTexteEnregistrable;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.SupTexteEnregistrable;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
@@ -21,13 +24,17 @@ public final class FiltreModifications extends DocumentFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FiltreModifications.class.getName());	
 	
 	private final MoteurEdition moteur;
+	private final Enregistreur enregistreur;
+	
 	private boolean reagir;
+	private boolean enregistrer;
 	
 	/**
 	 * Le constructeur a besoin de savoir quel moteur d'édition spécifier aux commandes
 	 * @param moteur	Le Moteur d'édition à renseigner pour les commandes (non null)
+	 * @param enregistreur L'enregsitreur de commandes (non null)
 	 */
-	public FiltreModifications(MoteurEdition moteur){
+	public FiltreModifications(MoteurEdition moteur, Enregistreur enregistreur){
 		
 		super();
 		
@@ -36,8 +43,16 @@ public final class FiltreModifications extends DocumentFilter {
 			throw new IllegalArgumentException("moteur est à null");
 		}
 		
+		if(enregistreur == null){
+			
+			throw new IllegalArgumentException("enregistreur est à null");
+		}	
+		
 		this.moteur = moteur;
+		this.enregistreur = enregistreur;
+		
 		reagir = true;
+		enregistrer = false;
 	}
 
 	@Override
@@ -52,7 +67,14 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		if(reagir){
 			
-			new InsererTexte(moteur, string).executer();
+			if(!enregistrer){
+				
+				new InsererTexte(moteur, string).executer();
+			}
+			else{
+				
+				new InsTexteEnregistrable(moteur, enregistreur, string).executer();
+			}
 		}
 		else{
 			
@@ -73,7 +95,14 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		if(reagir){
 			
-			new SupprimerTexte(moteur).executer();
+			if(!enregistrer){
+				
+				new SupprimerTexte(moteur).executer();
+			}
+			else{
+				
+				new SupTexteEnregistrable(moteur, enregistreur).executer();
+			}
 		}
 		else{
 			
@@ -95,7 +124,14 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		if(reagir){
 			
-			new InsererTexte(moteur, string).executer();
+			if(!enregistrer){
+				
+				new InsererTexte(moteur, string).executer();
+			}
+			else{
+				
+				new InsTexteEnregistrable(moteur, enregistreur, string).executer();
+			}
 		}
 		else{
 			
@@ -123,5 +159,14 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		LOGGER.debug("Désactivation du filtre modifications");
 		reagir = false;
+	}
+	
+	/**
+	 * Change le booleen décrivant si on doit executer des commandes enregistrables ou non
+	 * @param b
+	 */
+	public void setEnregistrer(boolean b){
+		
+		enregistrer = b;
 	}
 }

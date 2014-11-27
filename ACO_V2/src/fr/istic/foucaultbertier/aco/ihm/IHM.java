@@ -15,12 +15,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.AbstractDocument;
 
+import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.Observable;
 import fr.istic.foucaultbertier.aco.Observateur;
 import fr.istic.foucaultbertier.aco.commandes.Coller;
 import fr.istic.foucaultbertier.aco.commandes.Copier;
 import fr.istic.foucaultbertier.aco.commandes.Couper;
 import fr.istic.foucaultbertier.aco.commandes.SupprimerTexte;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CollerEnregistrable;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CopierEnregistrable;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CouperEnregistrable;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.SupTexteEnregistrable;
 import fr.istic.foucaultbertier.aco.moteur.Buffer;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
@@ -38,7 +43,13 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	private final JButton copier;
 	private final JButton couper;
 	private final JButton supprimer;
+	private final JButton enregistrer;
+	private final JButton jouer;
+	private final JButton stop;
 
+	//Booleen définissant si un enregistrement est en cours ou non
+	private boolean bEnreg;
+	
 	//Zone de texte
 	private final JTextArea zoneTexte;
 
@@ -48,15 +59,20 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	//Listener d'insertions
 	private final FiltreModifications filtreModifs;
 	
-    public IHM(final MoteurEdition moteur){
+	//Enregistreur des mementos des commandes enregistrables
+	private final Enregistreur enregistreur;
+	
+    public IHM(final MoteurEdition moteur, final Enregistreur enregistreur){
 
     	this.moteur = moteur;
-    	filtreModifs = new FiltreModifications(moteur);
+    	this.enregistreur = enregistreur;
+    	
+    	filtreModifs = new FiltreModifications(moteur, enregistreur);
     	
         zoneTexte = new JTextArea(15, 80);
         zoneTexte.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         zoneTexte.setFont(new Font("monospaced", Font.PLAIN, 14));
-        zoneTexte.addCaretListener(new ListenerSelection(moteur));
+        zoneTexte.addCaretListener(new ListenerSelection(moteur, enregistreur));
         ((AbstractDocument)zoneTexte.getDocument()).setDocumentFilter(filtreModifs);
         JScrollPane scrollingText = new JScrollPane(zoneTexte);
 
@@ -75,31 +91,50 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         copier = new JButton();
         couper = new JButton();
         supprimer = new JButton();
+        enregistrer = new JButton();
+        jouer = new JButton();
+        stop = new JButton();
 
         //Association des icones aux boutons
         coller.setIcon(new ImageIcon(getClass().getResource("/icones/coller.png")));
         copier.setIcon(new ImageIcon(getClass().getResource("/icones/copier.png")));
         couper.setIcon(new ImageIcon(getClass().getResource("/icones/couper.png")));
         supprimer.setIcon(new ImageIcon(getClass().getResource("/icones/supprimer.png")));
+        enregistrer.setIcon(new ImageIcon(getClass().getResource("/icones/rec.png")));
+        jouer.setIcon(new ImageIcon(getClass().getResource("/icones/play.png")));
+        stop.setIcon(new ImageIcon(getClass().getResource("/icones/stop.png")));
 
         //Association des bulles d'aide
         coller.setToolTipText("Coller");
         copier.setToolTipText("Copier");
         couper.setToolTipText("Couper");
         supprimer.setToolTipText("Supprimer");
+        enregistrer.setToolTipText("Enregistrer");
+        jouer.setToolTipText("Jouer");
+        stop.setToolTipText("Stop");
 
         //Spécification des listeners
         coller.addActionListener(this);
         copier.addActionListener(this);
         couper.addActionListener(this);
         supprimer.addActionListener(this);
+        enregistrer.addActionListener(this);
+        jouer.addActionListener(this);
+        stop.addActionListener(this);
 
         //Ajout des boutons à la barre d'outils
         menuBar.add(copier);
         menuBar.add(couper);
         menuBar.add(coller);
         menuBar.add(supprimer);
+        menuBar.add(enregistrer);
+        menuBar.add(jouer);
+        menuBar.add(stop);
 
+        //On ne peut pas jouer une action dès le début
+        stop.setEnabled(false);
+        jouer.setEnabled(false);
+        
         //Mise en place des éléments dans la fenêtre
         setContentPane(content);
         setJMenuBar(menuBar);
@@ -118,7 +153,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 		/* Pr�conditions */
 		if(o == null){
 			
-			throw new IllegalArgumentException("o est � null");
+			throw new IllegalArgumentException("o est à null");
 		}
 		
 		/* Traitement */
@@ -141,19 +176,72 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 		
 		if (e.getSource()==coller){
 		
-			new Coller(moteur).executer();
+			if(bEnreg){
+				
+				new CollerEnregistrable(moteur, enregistreur).executer();
+			}
+			else{
+				
+				new Coller(moteur).executer();
+			}
 		}
 		else if (e.getSource()==copier){
-		
-			new Copier(moteur).executer();
+			
+			if(bEnreg){
+				
+				new CopierEnregistrable(moteur, enregistreur).executer();
+			}
+			else{
+				
+				new Copier(moteur).executer();
+			}
 		}
 		else if (e.getSource()==couper){
-		
-			new Couper(moteur).executer();
+			
+			if(bEnreg){
+				
+				new CouperEnregistrable(moteur, enregistreur).executer();
+			}
+			else{
+				
+				new Couper(moteur).executer();
+			}
 		}
 		else if (e.getSource()==supprimer){
 		
-			new SupprimerTexte(moteur).executer();
+			if(bEnreg){
+				
+				new SupTexteEnregistrable(moteur, enregistreur).executer();
+			}
+			else{
+				
+				new SupprimerTexte(moteur).executer();
+			}
+		}
+		else if (e.getSource()==enregistrer){
+			
+			jouer.setEnabled(false);
+			enregistrer.setEnabled(false);
+			stop.setEnabled(true);
+			bEnreg = true;
+			filtreModifs.setEnregistrer(true);
+			enregistreur.nettoyer();
+		}
+		else if (e.getSource()==jouer){
+			
+			enregistrer.setEnabled(false);
+			jouer.setEnabled(false);
+			enregistreur.rejouerCommandes();
+			jouer.setEnabled(true);
+			enregistrer.setEnabled(true);
+		}
+		else if (e.getSource()==stop){
+			
+			bEnreg = false;
+			filtreModifs.setEnregistrer(false);
+			enregistrer.setEnabled(true);
+			stop.setEnabled(false);
+			jouer.setEnabled(true);
 		}
 	}
 }
