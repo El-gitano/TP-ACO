@@ -58,6 +58,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	
 	//Listener d'insertions
 	private final FiltreModifications filtreModifs;
+	private final ListenerSelection listenerSelection;
 	
 	//Enregistreur des mementos des commandes enregistrables
 	private final Enregistreur enregistreur;
@@ -68,11 +69,12 @@ public final class IHM extends JFrame implements Observateur, ActionListener
     	this.enregistreur = enregistreur;
     	
     	filtreModifs = new FiltreModifications(moteur, enregistreur);
+    	listenerSelection = new ListenerSelection(moteur, enregistreur);
     	
         zoneTexte = new JTextArea(15, 80);
         zoneTexte.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         zoneTexte.setFont(new Font("monospaced", Font.PLAIN, 14));
-        zoneTexte.addCaretListener(new ListenerSelection(moteur, enregistreur));
+        zoneTexte.addCaretListener(listenerSelection);
         ((AbstractDocument)zoneTexte.getDocument()).setDocumentFilter(filtreModifs);
         JScrollPane scrollingText = new JScrollPane(zoneTexte);
 
@@ -225,6 +227,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 			stop.setEnabled(true);
 			bEnreg = true;
 			filtreModifs.setEnregistrer(true);
+			listenerSelection.setEnregistrer(true);
 			enregistreur.nettoyer();
 		}
 		else if (e.getSource()==jouer){
@@ -239,6 +242,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 			
 			bEnreg = false;
 			filtreModifs.setEnregistrer(false);
+			listenerSelection.setEnregistrer(false);
 			enregistrer.setEnabled(true);
 			stop.setEnabled(false);
 			jouer.setEnabled(true);

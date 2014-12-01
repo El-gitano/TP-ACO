@@ -113,6 +113,14 @@ public final class Buffer implements Observable
 	}
 	
 	/**
+	 * Renseigne l'indice max. pour l'objet Selection
+	 * @return L'indice max. utilisable dans la sélection
+	 */
+	public int getSelMax(){
+		
+		return contenu.length();
+	}
+	/**
 	 * Récupère le contenu du buffer spécifié par la sélection passée en paramètre
 	 * @param selection La sélection souhaitée (non null)
 	 * @return La chaîne du buffer représentée par la sélection

@@ -81,7 +81,20 @@ public final class MoteurImplementation implements MoteurEdition
 			throw new IllegalArgumentException("selection est à null");
 		}
 		
-		this.selection.setSelection(selection);
+		int chgDebut = selection.getDebut();
+		int chgFin = selection.getFin();
+		
+		//Rajout pour les commandes enregistrables
+		if(chgFin > buffer.getSelMax()){
+			
+			chgFin = buffer.getSelMax();
+		}
+		if(chgDebut > buffer.getSelMax()){
+			
+			chgDebut = buffer.getSelMax();
+		}
+		
+		this.selection.setSelection(new Selection(chgDebut, chgFin));
 	}
 	
 	/**
