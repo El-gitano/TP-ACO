@@ -143,7 +143,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 
         //Ajout des comportements par d�faut et des propriété propres à notre éditeur + Affichage
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Editeur de texte v1 [BERTIER - FOUCAULT]");
+        setTitle("Editeur de texte v2 [BERTIER - FOUCAULT]");
         setLocationRelativeTo(null);
         setVisible(true);
         pack();
