@@ -47,7 +47,11 @@ public final class MoteurImplementation implements MoteurEdition
 	public final void couper() {
 		
 		pressePapier.setContenu(buffer.getContenu(selection));
-		buffer.supprimerTexte(selection);
+		
+		if(!selection.estVide()){
+			
+			buffer.supprimerTexte(selection);
+		}
 	}
 	
 	/**
