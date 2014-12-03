@@ -37,7 +37,7 @@ public final class Buffer implements Observable
 	
 	public Buffer(){
 
-		listeObservateurs = new ArrayList<>();
+		listeObservateurs = new ArrayList<Observateur>();
 		contenu = new StringBuffer();
 		offsetModif = 0;
 	}

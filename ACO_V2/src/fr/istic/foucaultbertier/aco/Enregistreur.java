@@ -29,7 +29,7 @@ public final class Enregistreur {
 	
 	public Enregistreur(){
 		
-		listeMementos = new ArrayList<>();
+		listeMementos = new ArrayList<Memento>();
 	}
 	
 	/**
