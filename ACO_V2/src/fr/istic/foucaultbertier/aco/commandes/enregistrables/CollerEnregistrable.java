@@ -5,12 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.Coller;
-import fr.istic.foucaultbertier.aco.mementos.Memento;
+import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
 import fr.istic.foucaultbertier.aco.mementos.MementoColler;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
- * La classe CollerEnregistrable execute une commande Coller et enregistre son Memento dans un Enregistreur
+ * La classe CollerEnregistrable execute une commande Coller et enregistre son MementoCommande dans un Enregistreur
  * @see Enregistreur
  * @see Coller
  * @see CommandeEnregistrable
@@ -54,7 +54,7 @@ public final class CollerEnregistrable implements CommandeEnregistrable {
 	 * Créé une Commande CollerEnregistrable à partir d'un MementoColler et execute une commande Coller
 	 * @param memento Le memento duquel on restaure l'état de la commande enregistrable
 	 */
-	public CollerEnregistrable(MementoColler memento){
+	public CollerEnregistrable(MementoCommande memento){
 		
 		restaurer(memento);
 		LOGGER.trace("Rejeu d'une commande CollerEnregistrable");
@@ -77,7 +77,7 @@ public final class CollerEnregistrable implements CommandeEnregistrable {
 	 * @see MementoColler
 	 */
 	@Override
-	public final Memento getMemento() {
+	public final MementoCommande getMemento() {
 		
 		return new MementoColler(moteur, enregistreur);
 	}
@@ -88,7 +88,7 @@ public final class CollerEnregistrable implements CommandeEnregistrable {
 	 * @see MementoColler
 	 */
 	@Override
-	public final void restaurer(Memento memento) {
+	public final void restaurer(MementoCommande memento) {
 		
 		/* Préconditions */
 		if(memento == null){

@@ -5,13 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.Copier;
-import fr.istic.foucaultbertier.aco.mementos.Memento;
-import fr.istic.foucaultbertier.aco.mementos.MementoColler;
+import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
 import fr.istic.foucaultbertier.aco.mementos.MementoCopier;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
- * La classe CopierEnregistrable execute une commande Copier et enregistre son Memento dans un Enregistreur
+ * La classe CopierEnregistrable execute une commande Copier et enregistre son MementoCommande dans un Enregistreur
  * @see Enregistreur
  * @see Copier
  * @see CommandeEnregistrable
@@ -55,7 +54,7 @@ public final class CopierEnregistrable implements CommandeEnregistrable {
 	 * Créé une Commande CopierEnregistrable à partir d'un MementoCopier et execute une commande Copier
 	 * @param memento Le memento duquel on restaure l'état de la commande enregistrable
 	 */
-	public CopierEnregistrable(MementoCopier memento){
+	public CopierEnregistrable(MementoCommande memento){
 		
 		restaurer(memento);	
 		new Copier(moteur).executer();
@@ -77,7 +76,7 @@ public final class CopierEnregistrable implements CommandeEnregistrable {
 	 * @see MementoCopier
 	 */
 	@Override
-	public final Memento getMemento() {
+	public final MementoCommande getMemento() {
 		
 		return new MementoCopier(moteur, enregistreur);
 	}
@@ -88,7 +87,7 @@ public final class CopierEnregistrable implements CommandeEnregistrable {
 	 * @see MementoCopier
 	 */
 	@Override
-	public final void restaurer(Memento memento) {
+	public final void restaurer(MementoCommande memento) {
 		
 		/* Préconditions */
 		if(memento == null){

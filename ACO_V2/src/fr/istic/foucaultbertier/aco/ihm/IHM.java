@@ -53,7 +53,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	//Zone de texte
 	private final JTextArea zoneTexte;
 
-	//Moteur d'�dition
+	//Moteur d'édition
 	private final MoteurEdition moteur;
 	
 	//Listener d'insertions
@@ -152,7 +152,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	@Override
 	public final void miseAJour(Observable o) {
 		
-		/* Pr�conditions */
+		/* Préconditions */
 		if(o == null){
 			
 			throw new IllegalArgumentException("o est à null");

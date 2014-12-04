@@ -6,9 +6,9 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 /**
  * Cette classe est chargée de stocker l'état d'une commande SupTexteEnregistrable
  * @see SupTexteEnregistrable
- * @see Memento
+ * @see MementoCommande
  */
-public final class MementoSupprTexte extends Memento{
+public final class MementoSupprTexte extends MementoCommande{
 
 	public MementoSupprTexte(MoteurEdition moteur, Enregistreur enregistreur){
 		

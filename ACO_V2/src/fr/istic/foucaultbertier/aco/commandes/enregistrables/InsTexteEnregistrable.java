@@ -5,12 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.InsererTexte;
-import fr.istic.foucaultbertier.aco.mementos.Memento;
+import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
 import fr.istic.foucaultbertier.aco.mementos.MementoInsTexte;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
- * La classe InsTexteEnregistrable execute une commande InsererTexte et enregistre son Memento dans un Enregistreur
+ * La classe InsTexteEnregistrable execute une commande InsererTexte et enregistre son MementoCommande dans un Enregistreur
  * @see Enregistreur
  * @see InsererTexte
  * @see CommandeEnregistrable
@@ -61,7 +61,7 @@ public final class InsTexteEnregistrable implements CommandeEnregistrable {
 	 * Créé une Commande InsTexteEnregistrable à partir d'un MementoInsTexte et execute une commande InsererTexte
 	 * @param memento Le memento duquel on restaure l'état de la commande enregistrable
 	 */
-	public InsTexteEnregistrable(MementoInsTexte memento){
+	public InsTexteEnregistrable(MementoCommande memento){
 		
 		restaurer(memento);	
 		new InsererTexte(moteur, chaine).executer();
@@ -83,7 +83,7 @@ public final class InsTexteEnregistrable implements CommandeEnregistrable {
 	 * @see MementoInsTexte
 	 */
 	@Override
-	public final Memento getMemento() {
+	public final MementoCommande getMemento() {
 		
 		return new MementoInsTexte(moteur, enregistreur, chaine);
 	}
@@ -94,7 +94,7 @@ public final class InsTexteEnregistrable implements CommandeEnregistrable {
 	 * @see MementoInsTexte
 	 */
 	@Override
-	public final void restaurer(Memento memento) {
+	public final void restaurer(MementoCommande memento) {
 		
 		/* Préconditions */
 		if(memento == null){

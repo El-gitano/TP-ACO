@@ -7,16 +7,16 @@ import fr.istic.foucaultbertier.aco.moteur.Selection;
 /**
  * Cette classe est chargée de stocker l'état d'une commande SelectionnerEnregistrable
  * @see SelectionnerEnregistrable
- * @see Memento
+ * @see MementoCommande
  */
-public final class MementoSelectionner extends Memento{
+public final class MementoSelectionner extends MementoCommande{
 
 	private Selection selection;
 		
 	public MementoSelectionner(MoteurEdition moteur, Enregistreur enregistreur, Selection selection){
 		
 		super(moteur, enregistreur);
-		setSelection(selection);
+		this.selection = selection;
 	}
 	
 	/**

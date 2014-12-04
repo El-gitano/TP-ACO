@@ -6,9 +6,9 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 /**
  * Cette classe est chargée de stocker l'état d'une commande CopierEnregistrable
  * @see CopierEnregistrable
- * @see Memento
+ * @see MementoCommande
  */
-public final class MementoCopier extends Memento{
+public final class MementoCopier extends MementoCommande{
 
 	public MementoCopier(MoteurEdition moteur, Enregistreur enregistreur){
 		

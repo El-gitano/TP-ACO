@@ -5,12 +5,12 @@ import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.SupprimerTexte;
-import fr.istic.foucaultbertier.aco.mementos.Memento;
+import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
 import fr.istic.foucaultbertier.aco.mementos.MementoSupprTexte;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
- * La classe SupTexteEnregistrable execute une commande SupprimerTexte et enregistre son Memento dans un Enregistreur
+ * La classe SupTexteEnregistrable execute une commande SupprimerTexte et enregistre son MementoCommande dans un Enregistreur
  * @see Enregistreur
  * @see SupprimerTexte
  * @see CommandeEnregistrable
@@ -54,7 +54,7 @@ public final class SupTexteEnregistrable implements CommandeEnregistrable {
 	 * Créé une Commande SupTexteEnregistrable à partir d'un MementoSupprTexte et execute une commande SupprimerTexte
 	 * @param memento Le memento duquel on restaure l'état de la commande enregistrable
 	 */
-	public SupTexteEnregistrable(MementoSupprTexte memento){
+	public SupTexteEnregistrable(MementoCommande memento){
 		
 		restaurer(memento);	
 		new SupprimerTexte(moteur).executer();
@@ -76,7 +76,7 @@ public final class SupTexteEnregistrable implements CommandeEnregistrable {
 	 * @see MementoSupprTexte
 	 */
 	@Override
-	public final Memento getMemento() {
+	public final MementoCommande getMemento() {
 		
 		return new MementoSupprTexte(moteur, enregistreur);
 	}
@@ -87,7 +87,7 @@ public final class SupTexteEnregistrable implements CommandeEnregistrable {
 	 * @see MementoSupprTexte
 	 */
 	@Override
-	public final void restaurer(Memento memento) {
+	public final void restaurer(MementoCommande memento) {
 		
 		/* Préconditions */
 		if(memento == null){

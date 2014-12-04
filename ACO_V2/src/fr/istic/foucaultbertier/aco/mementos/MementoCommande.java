@@ -4,12 +4,12 @@ import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
- * La classe Memento sert à stocker l'état des commandes enregistrables.
+ * La classe MementoCommande sert à stocker l'état des commandes enregistrables.
  * Comme toutes les commandes enregsitrables ont un attribut moteur et enregistreur, ceux-ci ainsi que les getters/setters qui leurs sont associés sont définis au sein de cette classe abstraite
  * @see CommandeEnregistrable
  * @see Enregistreur
  */
-public abstract class Memento {
+public abstract class MementoCommande {
 
 	protected MoteurEdition moteur;
 	protected Enregistreur enregistreur;
@@ -18,10 +18,10 @@ public abstract class Memento {
 	 * Permet de sauvegarder l'attribut moteur d'une commande enregistrable
 	 * @param moteur L'attribut moteur de la commande enregistrable (non null)
 	 */
-	public Memento(MoteurEdition moteur, Enregistreur enregistreur){
+	public MementoCommande(MoteurEdition moteur, Enregistreur enregistreur){
 		
-		setMoteur(moteur);
-		setEnregistreur(enregistreur);
+		this.moteur = moteur;
+		this.enregistreur = enregistreur;
 	}
 	
 	/**

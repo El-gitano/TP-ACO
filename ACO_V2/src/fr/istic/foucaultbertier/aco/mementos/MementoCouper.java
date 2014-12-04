@@ -6,9 +6,9 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 /**
  * Cette classe est chargée de stocker l'état d'une commande CouperEnregistrable
  * @see CouperEnregistrable
- * @see Memento
+ * @see MementoCommande
  */
-public final class MementoCouper extends Memento{
+public final class MementoCouper extends MementoCommande{
 
 	public MementoCouper(MoteurEdition moteur, Enregistreur enregistreur){
 		

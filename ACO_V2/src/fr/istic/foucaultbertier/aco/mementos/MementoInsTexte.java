@@ -6,22 +6,22 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 /**
  * Cette classe est chargée de stocker l'état d'une commande InsTexteEnregistrable
  * @see InsTexteEnregistrable
- * @see Memento
+ * @see MementoCommande
  */
-public final class MementoInsTexte extends Memento{
+public final class MementoInsTexte extends MementoCommande{
 
 	private String texte;
 	
 	/**
 	 * Crée le memento à partir des attributs de la commande enregsitrable
 	 * @param texte L'attribut texte de la commande InsTexteEnregistrable (non null)
-	 * @see Memento
+	 * @see MementoCommande
 	 * @see InsTexteEnregistrable
 	 */
 	public MementoInsTexte(MoteurEdition moteur, Enregistreur enregistreur, String texte){
 		
 		super(moteur, enregistreur);
-		setTexte(texte);
+		this.texte = texte;
 	}
 	
 	/**

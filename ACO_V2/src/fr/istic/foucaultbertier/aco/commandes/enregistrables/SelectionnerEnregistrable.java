@@ -5,13 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.commandes.Selectionner;
-import fr.istic.foucaultbertier.aco.mementos.Memento;
+import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
 import fr.istic.foucaultbertier.aco.mementos.MementoSelectionner;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 import fr.istic.foucaultbertier.aco.moteur.Selection;
 
 /**
- * La classe SelectionnerEnregistrable execute une commande Selectionner et enregistre son Memento dans un Enregistreur
+ * La classe SelectionnerEnregistrable execute une commande Selectionner et enregistre son MementoCommande dans un Enregistreur
  * @see Enregistreur
  * @see Selectionner
  * @see CommandeEnregistrable
@@ -62,7 +62,7 @@ public final class SelectionnerEnregistrable implements CommandeEnregistrable {
 	 * Créé une Commande SelectionnerEnregistrable à partir d'un MementoSelectionner et execute une commande Selectionner
 	 * @param memento Le memento duquel on restaure l'état de la commande enregistrable
 	 */
-	public SelectionnerEnregistrable(MementoSelectionner memento){
+	public SelectionnerEnregistrable(MementoCommande memento){
 		
 		restaurer(memento);
 		LOGGER.trace("Exécution d'une commande Selectionner");
@@ -85,7 +85,7 @@ public final class SelectionnerEnregistrable implements CommandeEnregistrable {
 	 * @see MementoSelectionner
 	 */
 	@Override
-	public final Memento getMemento() {
+	public final MementoCommande getMemento() {
 		
 		return new MementoSelectionner(moteur, enregistreur, selection);
 	}
@@ -96,7 +96,7 @@ public final class SelectionnerEnregistrable implements CommandeEnregistrable {
 	 * @see MementoSelectionner
 	 */
 	@Override
-	public final void restaurer(Memento memento) {
+	public final void restaurer(MementoCommande memento) {
 		
 		/* Préconditions */
 		if(memento == null){
