@@ -29,7 +29,8 @@ public final class Enregistreur {
 	
 	public Enregistreur(){
 		
-		listeMementos = new ArrayList<Memento>();
+		//Compatibilité Java 6
+		listeMementos = new ArrayList<MementoCommande>();
 	}
 	
 	/**
