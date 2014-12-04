@@ -1,4 +1,0 @@
-FUNC VOID main() {
-	PRINT "HELLO WORLD"
-}
-
