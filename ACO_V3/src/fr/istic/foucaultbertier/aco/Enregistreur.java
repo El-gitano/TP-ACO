@@ -10,7 +10,7 @@ import fr.istic.foucaultbertier.aco.commandes.enregistrables.CouperEnregistrable
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.InsTexteEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.SelectionnerEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.SupTexteEnregistrable;
-import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
+import fr.istic.foucaultbertier.aco.mementos.Memento;
 import fr.istic.foucaultbertier.aco.mementos.MementoColler;
 import fr.istic.foucaultbertier.aco.mementos.MementoCopier;
 import fr.istic.foucaultbertier.aco.mementos.MementoCouper;
@@ -21,11 +21,11 @@ import fr.istic.foucaultbertier.aco.mementos.MementoSupprTexte;
 /**
  * Cette classe est chargée d'enregsitrer les mementos des commandes enregsitrables de façon à pouvoir rejouer les commandes à la demande de l'utilisateur
  * @see CommandeEnregistrable
- * @see MementoCommande
+ * @see Memento
  */
 public final class Enregistreur {
 
-	List<MementoCommande> listeMementos;
+	List<Memento> listeMementos;
 	
 	public Enregistreur(){
 		
@@ -56,7 +56,7 @@ public final class Enregistreur {
 	
 	public final void rejouerCommandes(){
 		
-		for(MementoCommande m : listeMementos){
+		for(Memento m : listeMementos){
 			
 			if(m instanceof MementoColler){
 				
