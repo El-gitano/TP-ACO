@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.istic.foucaultbertier.aco.Observable;
 import fr.istic.foucaultbertier.aco.Observateur;
+import fr.istic.foucaultbertier.aco.mementos.MementoBuffer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +29,7 @@ public final class Buffer implements Observable
 	/**
 	 * Un objet de la classe StringBuffer est utilisé pour ses méthodes d'insertions/suppressions pratiques
 	 */
-	private final StringBuffer contenu;
+	private StringBuffer contenu;
 	
 	/**
 	 * Cet entier décrit la nouvelle position du curseur suite à la modification
@@ -190,5 +191,31 @@ public final class Buffer implements Observable
 			
 			o.miseAJour(this);
 		}
+	}
+	
+	/**
+	 * Sauvegarde l'état du Buffer au sein d'un memento
+	 * @return Un memento contenant l'etat du Buffer
+	 */
+	public MementoBuffer getMemento(){
+		
+		return new MementoBuffer(new StringBuffer(contenu), offsetModif);
+	}
+	
+	/**
+	 * Restore l'état du Buffer depuis un memento
+	 * @param memento Un memento contenant l'etat du Buffer (non null)
+	 */
+	public void restaurer(MementoBuffer memento){
+		
+		if(memento == null){
+			
+			throw new IllegalArgumentException("Contenu est à null");
+		}
+		
+		contenu = memento.getContenu();
+		offsetModif = memento.getOffModif();
+		
+		notifierObservateurs();
 	}
 }

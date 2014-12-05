@@ -20,6 +20,16 @@ public abstract class MementoCommande {
 	 */
 	public MementoCommande(MoteurEdition moteur, Enregistreur enregistreur){
 		
+		if(moteur == null){
+			
+			throw new IllegalArgumentException("moteur est à null");
+		}
+		
+		if(enregistreur == null){
+			
+			throw new IllegalArgumentException("enregistreur est à null");
+		}
+		
 		this.moteur = moteur;
 		this.enregistreur = enregistreur;
 	}

@@ -1,5 +1,7 @@
 package fr.istic.foucaultbertier.aco.moteur;
 
+import fr.istic.foucaultbertier.aco.mementos.MementoSysteme;
+
 
 /**
  * La classe MoteurImplementation représente une implémentation d'un moteur d'édition
@@ -11,6 +13,7 @@ public final class MoteurImplementation implements MoteurEdition
 	private final Selection selection;
 	private final Buffer buffer;
 	private final PressePapier pressePapier;
+	private final GestionnaireHisto historique;
 	
 	/**
 	 * Instancie l'ensemble des objets nécessaires à la mise en oeuvre d'un moteur d'édition
@@ -20,6 +23,9 @@ public final class MoteurImplementation implements MoteurEdition
 		selection = new Selection(0, 0);
 		buffer = new Buffer();
 		pressePapier = new PressePapier();
+		
+		historique = new GestionnaireHisto();
+		sauvegarderEtat();
 	}
 
 	/**
@@ -28,7 +34,10 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void copier() {
 		
-		pressePapier.setContenu(buffer.getContenu(selection));
+		if(!selection.estVide()){
+			
+			pressePapier.setContenu(buffer.getContenu(selection));
+		}
 	}
 	
 	/**
@@ -37,7 +46,11 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void coller() {
 		
-		buffer.ajouterTexte(pressePapier.getContenu(), selection);
+		if(!pressePapier.vide()){
+			
+			buffer.ajouterTexte(pressePapier.getContenu(), selection);
+			sauvegarderEtat();
+		}
 	}
 	
 	/**
@@ -46,11 +59,11 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void couper() {
 		
-		pressePapier.setContenu(buffer.getContenu(selection));
-		
 		if(!selection.estVide()){
 			
+			pressePapier.setContenu(buffer.getContenu(selection));
 			buffer.supprimerTexte(selection);
+			sauvegarderEtat();
 		}
 	}
 	
@@ -67,6 +80,7 @@ public final class MoteurImplementation implements MoteurEdition
 		}
 		
 		buffer.ajouterTexte(chaine, selection);
+		sauvegarderEtat();
 	}
 	
 	/**
@@ -104,6 +118,7 @@ public final class MoteurImplementation implements MoteurEdition
 	public final void supprimerTexte() {
 		
 		buffer.supprimerTexte(selection);
+		sauvegarderEtat();
 	}
 	
 	/**
@@ -113,6 +128,37 @@ public final class MoteurImplementation implements MoteurEdition
 	public final Buffer getBuffer(){
 		
 		return buffer;
+	}
+	
+	/**
+	 * Remet le Buffer et la Selection à leurs état au temps N-1
+	 */
+	public final void defaire(){
+		
+		MementoSysteme memSysteme = historique.defaire();
+		buffer.restaurer(memSysteme.getMemBuffer());
+		selection.restaurer(memSysteme.getMemSelection());
+	}
+	
+	/**
+	 * Rétablit un changement précédemment annulé à l'aide de defaire()
+	 */
+	public final void refaire(){
+		
+		if(historique.peutRefaire()){
+			
+			MementoSysteme memSysteme = historique.refaire();
+			buffer.restaurer(memSysteme.getMemBuffer());
+			selection.restaurer(memSysteme.getMemSelection());
+		}
+	}
+	
+	/**
+	 * Sauvegarde l'état du Buffer et de la Selection dans le gestionnaire d'historique
+	 */
+	private final void sauvegarderEtat(){
+		
+		historique.ajouterElement(new MementoSysteme(buffer.getMemento(), selection.getMemento()));
 	}
 }
 

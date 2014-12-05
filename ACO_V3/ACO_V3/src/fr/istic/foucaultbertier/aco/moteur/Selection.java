@@ -1,5 +1,7 @@
 package fr.istic.foucaultbertier.aco.moteur;
 
+import fr.istic.foucaultbertier.aco.mementos.MementoSelection;
+
 
 /**
  * La classe Selection représente la sélection de l'utilisateur.
@@ -130,5 +132,29 @@ public final class Selection
 		/* Traitement */
 		this.debut = selection.getDebut();
 		this.fin = selection.getFin();
+	}
+	
+	/**
+	 * Sauvegarde l'état de la selection au sein d'un Memento
+	 * @return Un memento contenant l'état de la Selection
+	 */
+	public MementoSelection getMemento(){
+		
+		return new MementoSelection(debut, fin);
+	}
+	
+	/**
+	 * Restore l'état de la selection depuis un Memento
+	 * @param memento Un memento contenant l'état pour la Selection
+	 */
+	public void restaurer(MementoSelection memento){
+		
+		if(memento == null){
+			
+			throw new IllegalArgumentException("memento est à null");
+		}
+		
+		debut = memento.getDebut();
+		fin = memento.getFin();
 	}
 }

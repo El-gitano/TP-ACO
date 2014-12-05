@@ -54,5 +54,15 @@ public  interface MoteurEdition
 	 * Effectue une suppression de texte dans le buffer
 	 */
 	public void supprimerTexte();
+	
+	/**
+	 * Remet les élements du moteur dans l'état précédant la dernière action effectuée
+	 */
+	public void defaire();
+	
+	/**
+	 * Remet les élements du moteur dans l'état précédemment atteind
+	 */
+	public void refaire();
 }
 

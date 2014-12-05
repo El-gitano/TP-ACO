@@ -16,6 +16,12 @@ public final class MementoSelectionner extends MementoCommande{
 	public MementoSelectionner(MoteurEdition moteur, Enregistreur enregistreur, Selection selection){
 		
 		super(moteur, enregistreur);
+		
+		if(selection == null){
+			
+			throw new IllegalArgumentException("selection est à null");
+		}
+
 		this.selection = selection;
 	}
 	

@@ -26,19 +26,30 @@ import fr.istic.foucaultbertier.aco.mementos.MementoSupprTexte;
 public final class Enregistreur {
 
 	List<MementoCommande> listeMementos;
+	private boolean enregistrer;
 	
 	public Enregistreur(){
 		
 		//Compatibilité Java 6
 		listeMementos = new ArrayList<MementoCommande>();
+		enregistrer = false;
 	}
 	
 	/**
-	 * Vide la liste des mementos enregistrés par l'objet
+	 * Vide la liste des mementos enregistrés par l'objet et active l'enregsitrement
 	 */
-	public final void nettoyer(){
+	public final void activer(){
 		
 		listeMementos.clear();
+		enregistrer = true;
+	}
+	
+	/**
+	 * Désactive l'enregistrement des commandes
+	 */
+	public final void desactiver(){
+		
+		enregistrer = false;
 	}
 	
 	/**
@@ -52,7 +63,10 @@ public final class Enregistreur {
 			throw new IllegalArgumentException("commande est à null");
 		}
 		
-		listeMementos.add(commande.getMemento());
+		if(enregistrer){
+			
+			listeMementos.add(commande.getMemento());
+		}
 	}
 	
 	public final void rejouerCommandes(){
