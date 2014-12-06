@@ -95,6 +95,7 @@ public class TypeCheck {
 		FunctionSymbol fs= new FunctionSymbol(new LabelSymbol(name),ft );
 		
 		// test si deja presente dans la table des symboles
+		
 		FunctionSymbol test = (FunctionSymbol) symTab.lookup(name);
 		if (test != null) {
 			// fonction ou prototype presente dans la table des symboles

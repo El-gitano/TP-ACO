@@ -37,13 +37,13 @@ function [SymbolTable symTab] returns [Code3a code]
 	{
 		symTab.enterScope();
 	}
-	^(FUNC_KW t=type i=IDENT param_list[symTab] ^(BODY corps=statement[symTab]))
+	^(FUNC_KW t=type i=IDENT cParm=param_list[symTab] ^(BODY corps=statement[symTab]))
 	{
 		FunctionType fType = new FunctionType(t, false);
 		FunctionSymbol fs= TypeCheck.checkFuncDecl(i, i.getText(), fType,  symTab);
 		
 		code = Code3aGenerator.genBeginFunc(fs) ;
-		
+		code.append(cParm);
 		code.append(corps);
 		
 		code.append (Code3aGenerator.genEndFunc());
@@ -81,7 +81,8 @@ param [SymbolTable symTab] returns [Code3a code]
     : i=IDENT
     {
     	VarSymbol vs = TypeCheck.checkAndDeclParmIdent(i,i.getText(),symTab);
-    	code = Code3aGenerator.genArg(vs) ;
+    	symTab.insert(i.getText(),vs);
+    	code = Code3aGenerator.genVar(vs) ;
     }
     ;
 
@@ -219,28 +220,47 @@ expression [SymbolTable symTab] returns [ExpAttribute expAtt]
 
 
 primary [SymbolTable symTab] returns [ExpAttribute expAtt]
-  : INTEGER
+	: i=INTEGER
     {
-      ConstSymbol cs = new ConstSymbol(Integer.parseInt($INTEGER.text));
-      expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
-    }
-  | IDENT
+		ConstSymbol cs = new ConstSymbol(Integer.parseInt(i.getText()));
+		expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
+	}
+	| i=IDENT
     {
-      Operand3a id = symTab.lookup($IDENT.text);
-      expAtt = new ExpAttribute(id.type, new Code3a(), symTab.lookup($IDENT.text));
+      Operand3a id = symTab.lookup(i.getText());
+      if (id ==null){
+      	System.err.println("ERREUR: Variable " + i.getText() +" non presente dans la table de symbole");
+      	symTab.print();
+      	System.exit(1);
+      }
+      expAtt = new ExpAttribute(id.type, new Code3a(), symTab.lookup(i.getText()));
     }
+	| 
+	{
+		Code3a c = new Code3a();
+		Code3a cArg = new Code3a();
+	}
+	^(FCALL i=IDENT (ctmp=argument_list[symTab]
+	{
+		cArg.append(ctmp);
+	}  
+  	)? )
+	{ 	
+		
+		VarSymbol varRetour = SymbDistrib.newTemp();
+        c.append(Code3aGenerator.genFuncCall(cArg,i.getText(),varRetour,symTab) );
+        expAtt = new ExpAttribute(Type.INT, c, varRetour);
+	}
   ;
   
 argument_list[SymbolTable symTab] returns [Code3a code]
     : 
     {
 		code = new Code3a();
-		System.err.println("ERREUR: array_elem a faire");
-		System.exit(1);	
 	}
 	(e=expression[symTab]
 	{
-		
+		code.append(Code3aGenerator.genArg(e.place));
 	}
 	)+
 	;

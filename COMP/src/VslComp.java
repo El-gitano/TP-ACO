@@ -71,6 +71,7 @@ public class VslComp {
 				code.print();
 				System.out.println("================================");
 				
+				
 
 				// We prepare the MIPS code generator, which will compile
 				// the three-address code into MIPS assembly.
