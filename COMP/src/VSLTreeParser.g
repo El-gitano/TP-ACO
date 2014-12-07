@@ -88,10 +88,7 @@ param [SymbolTable symTab] returns [Code3a code]
     ;
 
 statement [SymbolTable symTab] returns [Code3a code]
-    : {
- 	System.err.println("ici");
- 	symTab.print();
-    }^(ASSIGN_KW e=expression[symTab] i=IDENT)
+    : ^(ASSIGN_KW e=expression[symTab] i=IDENT)
     {	
     	// test si deja presente dans la table des symboles	
 		Operand3a test  = symTab.lookup(i.getText());
@@ -131,7 +128,7 @@ statement [SymbolTable symTab] returns [Code3a code]
     }
     | ^(WHILE_KW e=expression[symTab]  c=statement[symTab] )
     {
-    	code = Code3aGenerator.genWhile(e, c, symTab); 
+    	code = Code3aGenerator.genWhile(e, c, symTab);
     }
     | ^(FCALL_S i=IDENT c=argument_list[symTab]?)
     {

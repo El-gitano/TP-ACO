@@ -155,6 +155,7 @@ public class Code3aGenerator {
 		code.append(c);						
 		code.append(new Inst3a(Inst3a.TAC.GOTO,labDeb ,null, null));
 		code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
+		
 		return code;
 	}
 	

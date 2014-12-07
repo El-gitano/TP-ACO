@@ -67,7 +67,7 @@ public class VslComp {
 				System.out.println("\tCode 3 adresses : ");
 				System.out.println("================================");
 				SymbolTable symTab = new SymbolTable();
-				Code3a code = tparser.program(symTab);
+				Code3a code = tparser.program(symTab); 
 				code.print();
 				System.out.println("================================");
 				
