@@ -126,7 +126,7 @@ public class Code3aGenerator {
 		Code3a code= e.code;
 		LabelSymbol labFin = SymbDistrib.newLabel();
 		
-		if (cElse!=null){
+		if (!cElse.isEmpty()){
 			LabelSymbol labElse = SymbDistrib.newLabel();
 			code.append(new Inst3a(Inst3a.TAC.IFZ,e.place ,labElse ,null));
 			code.append(cIf);	
@@ -136,6 +136,7 @@ public class Code3aGenerator {
 			code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
 		}
 		else{
+			
 			code.append(new Inst3a(Inst3a.TAC.IFZ,e.place ,labFin ,null));
 			code.append(cIf);
 			code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));

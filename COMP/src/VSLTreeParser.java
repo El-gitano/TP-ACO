@@ -1,4 +1,4 @@
-// $ANTLR 3.5 ./src/VSLTreeParser.g 2014-12-06 19:11:37
+// $ANTLR 3.5 ./src/VSLTreeParser.g 2014-12-07 19:14:45
 
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.*;
@@ -186,11 +186,10 @@ public class VSLTreeParser extends TreeParser {
 
 							code=c;    
 					    
-					    
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:29:7: proto[symTab]
+					// ./src/VSLTreeParser.g:28:7: proto[symTab]
 					{
 					pushFollow(FOLLOW_proto_in_unit131);
 					proto(symTab);
@@ -218,7 +217,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "function"
-	// ./src/VSLTreeParser.g:35:1: function[SymbolTable symTab] returns [Code3a code] : ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) ) ;
+	// ./src/VSLTreeParser.g:34:1: function[SymbolTable symTab] returns [Code3a code] : ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) ) ;
 	public final Code3a function(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -229,8 +228,8 @@ public class VSLTreeParser extends TreeParser {
 		Code3a corps =null;
 
 		try {
-			// ./src/VSLTreeParser.g:36:4: ( ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) ) )
-			// ./src/VSLTreeParser.g:37:2: ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) )
+			// ./src/VSLTreeParser.g:35:4: ( ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) ) )
+			// ./src/VSLTreeParser.g:36:2: ^( FUNC_KW t= type i= IDENT cParm= param_list[symTab] ^( BODY corps= statement[symTab] ) )
 			{
 
 					symTab.enterScope();
@@ -266,6 +265,7 @@ public class VSLTreeParser extends TreeParser {
 					
 					code.append (Code3aGenerator.genEndFunc());
 					symTab.leaveScope();
+					
 				
 			}
 
@@ -284,14 +284,14 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "proto"
-	// ./src/VSLTreeParser.g:53:1: proto[SymbolTable symTab] : ^( PROTO_KW t= type i= IDENT param_list[symTab] ) ;
+	// ./src/VSLTreeParser.g:53:1: proto[SymbolTable symTab] : ^( PROTO_KW t= type i= IDENT ^( PARAM ( IDENT )* ) ) ;
 	public final void proto(SymbolTable symTab) throws RecognitionException {
 		CommonTree i=null;
 		Type t =null;
 
 		try {
-			// ./src/VSLTreeParser.g:54:2: ( ^( PROTO_KW t= type i= IDENT param_list[symTab] ) )
-			// ./src/VSLTreeParser.g:55:2: ^( PROTO_KW t= type i= IDENT param_list[symTab] )
+			// ./src/VSLTreeParser.g:54:2: ( ^( PROTO_KW t= type i= IDENT ^( PARAM ( IDENT )* ) ) )
+			// ./src/VSLTreeParser.g:55:2: ^( PROTO_KW t= type i= IDENT ^( PARAM ( IDENT )* ) )
 			{
 			match(input,PROTO_KW,FOLLOW_PROTO_KW_in_proto206); 
 			match(input, Token.DOWN, null); 
@@ -300,13 +300,38 @@ public class VSLTreeParser extends TreeParser {
 			state._fsp--;
 
 			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_proto214); 
-			pushFollow(FOLLOW_param_list_in_proto216);
-			param_list(symTab);
-			state._fsp--;
+			match(input,PARAM,FOLLOW_PARAM_in_proto217); 
+			if ( input.LA(1)==Token.DOWN ) {
+				match(input, Token.DOWN, null); 
+				// ./src/VSLTreeParser.g:55:36: ( IDENT )*
+				loop3:
+				while (true) {
+					int alt3=2;
+					int LA3_0 = input.LA(1);
+					if ( (LA3_0==IDENT) ) {
+						alt3=1;
+					}
+
+					switch (alt3) {
+					case 1 :
+						// ./src/VSLTreeParser.g:55:36: IDENT
+						{
+						match(input,IDENT,FOLLOW_IDENT_in_proto219); 
+						}
+						break;
+
+					default :
+						break loop3;
+					}
+				}
+
+				match(input, Token.UP, null); 
+			}
 
 			match(input, Token.UP, null); 
 
 
+					// les parametres des prototypes ne doivent pas etre utilisé
 					FunctionType fType = new FunctionType(t, false);
 					FunctionSymbol ps= TypeCheck.checkProtoDecl(i, i.getText(), fType,symTab);
 					symTab.insert(i.getText(), ps);
@@ -327,40 +352,40 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "type"
-	// ./src/VSLTreeParser.g:62:1: type returns [Type t] : ( INT_KW | VOID_KW );
+	// ./src/VSLTreeParser.g:63:1: type returns [Type t] : ( INT_KW | VOID_KW );
 	public final Type type() throws RecognitionException {
 		Type t = null;
 
 
 		try {
-			// ./src/VSLTreeParser.g:63:5: ( INT_KW | VOID_KW )
-			int alt3=2;
-			int LA3_0 = input.LA(1);
-			if ( (LA3_0==INT_KW) ) {
-				alt3=1;
+			// ./src/VSLTreeParser.g:64:5: ( INT_KW | VOID_KW )
+			int alt4=2;
+			int LA4_0 = input.LA(1);
+			if ( (LA4_0==INT_KW) ) {
+				alt4=1;
 			}
-			else if ( (LA3_0==VOID_KW) ) {
-				alt3=2;
+			else if ( (LA4_0==VOID_KW) ) {
+				alt4=2;
 			}
 
 			else {
 				NoViableAltException nvae =
-					new NoViableAltException("", 3, 0, input);
+					new NoViableAltException("", 4, 0, input);
 				throw nvae;
 			}
 
-			switch (alt3) {
+			switch (alt4) {
 				case 1 :
-					// ./src/VSLTreeParser.g:63:7: INT_KW
+					// ./src/VSLTreeParser.g:64:7: INT_KW
 					{
-					match(input,INT_KW,FOLLOW_INT_KW_in_type238); 
+					match(input,INT_KW,FOLLOW_INT_KW_in_type243); 
 					 t = Type.INT; 
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:64:7: VOID_KW
+					// ./src/VSLTreeParser.g:65:7: VOID_KW
 					{
-					match(input,VOID_KW,FOLLOW_VOID_KW_in_type249); 
+					match(input,VOID_KW,FOLLOW_VOID_KW_in_type254); 
 					 t = Type.VOID; 
 					}
 					break;
@@ -381,7 +406,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "param_list"
-	// ./src/VSLTreeParser.g:67:1: param_list[SymbolTable symTab] returns [Code3a code] : ^( PARAM (c= param[symTab] )* ) ;
+	// ./src/VSLTreeParser.g:68:1: param_list[SymbolTable symTab] returns [Code3a code] : ^( PARAM (c= param[symTab] )* ) ;
 	public final Code3a param_list(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -389,29 +414,29 @@ public class VSLTreeParser extends TreeParser {
 		Code3a c =null;
 
 		try {
-			// ./src/VSLTreeParser.g:68:5: ( ^( PARAM (c= param[symTab] )* ) )
-			// ./src/VSLTreeParser.g:69:2: ^( PARAM (c= param[symTab] )* )
+			// ./src/VSLTreeParser.g:69:5: ( ^( PARAM (c= param[symTab] )* ) )
+			// ./src/VSLTreeParser.g:70:2: ^( PARAM (c= param[symTab] )* )
 			{
 
 					code = new Code3a();
 				
-			match(input,PARAM,FOLLOW_PARAM_in_param_list280); 
+			match(input,PARAM,FOLLOW_PARAM_in_param_list285); 
 			if ( input.LA(1)==Token.DOWN ) {
 				match(input, Token.DOWN, null); 
-				// ./src/VSLTreeParser.g:72:10: (c= param[symTab] )*
-				loop4:
+				// ./src/VSLTreeParser.g:73:10: (c= param[symTab] )*
+				loop5:
 				while (true) {
-					int alt4=2;
-					int LA4_0 = input.LA(1);
-					if ( (LA4_0==IDENT) ) {
-						alt4=1;
+					int alt5=2;
+					int LA5_0 = input.LA(1);
+					if ( (LA5_0==IDENT) ) {
+						alt5=1;
 					}
 
-					switch (alt4) {
+					switch (alt5) {
 					case 1 :
-						// ./src/VSLTreeParser.g:72:11: c= param[symTab]
+						// ./src/VSLTreeParser.g:73:11: c= param[symTab]
 						{
-						pushFollow(FOLLOW_param_in_param_list285);
+						pushFollow(FOLLOW_param_in_param_list290);
 						c=param(symTab);
 						state._fsp--;
 
@@ -422,7 +447,7 @@ public class VSLTreeParser extends TreeParser {
 						break;
 
 					default :
-						break loop4;
+						break loop5;
 					}
 				}
 
@@ -446,7 +471,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "param"
-	// ./src/VSLTreeParser.g:80:1: param[SymbolTable symTab] returns [Code3a code] : i= IDENT ;
+	// ./src/VSLTreeParser.g:81:1: param[SymbolTable symTab] returns [Code3a code] : i= IDENT ;
 	public final Code3a param(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -454,10 +479,10 @@ public class VSLTreeParser extends TreeParser {
 		CommonTree i=null;
 
 		try {
-			// ./src/VSLTreeParser.g:81:5: (i= IDENT )
-			// ./src/VSLTreeParser.g:81:7: i= IDENT
+			// ./src/VSLTreeParser.g:82:5: (i= IDENT )
+			// ./src/VSLTreeParser.g:82:7: i= IDENT
 			{
-			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_param328); 
+			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_param333); 
 
 			    	VarSymbol vs = TypeCheck.checkAndDeclParmIdent(i,i.getText(),symTab);
 			    	symTab.insert(i.getText(),vs);
@@ -480,7 +505,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "statement"
-	// ./src/VSLTreeParser.g:89:1: statement[SymbolTable symTab] returns [Code3a code] : ( ^( ASSIGN_KW e= expression[symTab] i= IDENT ) | ^( RETURN_KW e= expression[symTab] ) | ^( PRINT_KW c= print_list[symTab] ) | ^( READ_KW c= read_list[symTab] ) | ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? ) | ^( WHILE_KW e= expression[symTab] c= statement[symTab] ) | ^( FCALL_S i= IDENT (c= argument_list[symTab] )? ) |c= block[symTab] );
+	// ./src/VSLTreeParser.g:90:1: statement[SymbolTable symTab] returns [Code3a code] : ( ^( ASSIGN_KW e= expression[symTab] i= IDENT ) | ^( RETURN_KW e= expression[symTab] ) | ^( PRINT_KW c= print_list[symTab] ) | ^( READ_KW c= read_list[symTab] ) | ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? ) | ^( WHILE_KW e= expression[symTab] c= statement[symTab] ) | ^( FCALL_S i= IDENT (c= argument_list[symTab] )? ) |c= block[symTab] );
 	public final Code3a statement(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -492,65 +517,69 @@ public class VSLTreeParser extends TreeParser {
 		Code3a cElse =null;
 
 		try {
-			// ./src/VSLTreeParser.g:90:5: ( ^( ASSIGN_KW e= expression[symTab] i= IDENT ) | ^( RETURN_KW e= expression[symTab] ) | ^( PRINT_KW c= print_list[symTab] ) | ^( READ_KW c= read_list[symTab] ) | ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? ) | ^( WHILE_KW e= expression[symTab] c= statement[symTab] ) | ^( FCALL_S i= IDENT (c= argument_list[symTab] )? ) |c= block[symTab] )
-			int alt7=8;
+			// ./src/VSLTreeParser.g:91:5: ( ^( ASSIGN_KW e= expression[symTab] i= IDENT ) | ^( RETURN_KW e= expression[symTab] ) | ^( PRINT_KW c= print_list[symTab] ) | ^( READ_KW c= read_list[symTab] ) | ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? ) | ^( WHILE_KW e= expression[symTab] c= statement[symTab] ) | ^( FCALL_S i= IDENT (c= argument_list[symTab] )? ) |c= block[symTab] )
+			int alt8=8;
 			switch ( input.LA(1) ) {
 			case ASSIGN_KW:
 				{
-				alt7=1;
+				alt8=1;
 				}
 				break;
 			case RETURN_KW:
 				{
-				alt7=2;
+				alt8=2;
 				}
 				break;
 			case PRINT_KW:
 				{
-				alt7=3;
+				alt8=3;
 				}
 				break;
 			case READ_KW:
 				{
-				alt7=4;
+				alt8=4;
 				}
 				break;
 			case IF_KW:
 				{
-				alt7=5;
+				alt8=5;
 				}
 				break;
 			case WHILE_KW:
 				{
-				alt7=6;
+				alt8=6;
 				}
 				break;
 			case FCALL_S:
 				{
-				alt7=7;
+				alt8=7;
 				}
 				break;
 			case BLOCK:
 				{
-				alt7=8;
+				alt8=8;
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 7, 0, input);
+					new NoViableAltException("", 8, 0, input);
 				throw nvae;
 			}
-			switch (alt7) {
+			switch (alt8) {
 				case 1 :
-					// ./src/VSLTreeParser.g:90:7: ^( ASSIGN_KW e= expression[symTab] i= IDENT )
+					// ./src/VSLTreeParser.g:91:7: ^( ASSIGN_KW e= expression[symTab] i= IDENT )
 					{
-					match(input,ASSIGN_KW,FOLLOW_ASSIGN_KW_in_statement358); 
+
+					 	System.err.println("ici");
+					 	symTab.print();
+					    
+					match(input,ASSIGN_KW,FOLLOW_ASSIGN_KW_in_statement364); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_statement362);
+					pushFollow(FOLLOW_expression_in_statement368);
 					e=expression(symTab);
 					state._fsp--;
 
-					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_statement367); 
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_statement373); 
 					match(input, Token.UP, null); 
 
 						
@@ -568,11 +597,11 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:109:7: ^( RETURN_KW e= expression[symTab] )
+					// ./src/VSLTreeParser.g:113:7: ^( RETURN_KW e= expression[symTab] )
 					{
-					match(input,RETURN_KW,FOLLOW_RETURN_KW_in_statement389); 
+					match(input,RETURN_KW,FOLLOW_RETURN_KW_in_statement395); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_statement393);
+					pushFollow(FOLLOW_expression_in_statement399);
 					e=expression(symTab);
 					state._fsp--;
 
@@ -584,11 +613,11 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 3 :
-					// ./src/VSLTreeParser.g:113:7: ^( PRINT_KW c= print_list[symTab] )
+					// ./src/VSLTreeParser.g:117:7: ^( PRINT_KW c= print_list[symTab] )
 					{
-					match(input,PRINT_KW,FOLLOW_PRINT_KW_in_statement410); 
+					match(input,PRINT_KW,FOLLOW_PRINT_KW_in_statement416); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_print_list_in_statement414);
+					pushFollow(FOLLOW_print_list_in_statement420);
 					c=print_list(symTab);
 					state._fsp--;
 
@@ -600,11 +629,11 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 4 :
-					// ./src/VSLTreeParser.g:117:7: ^( READ_KW c= read_list[symTab] )
+					// ./src/VSLTreeParser.g:121:7: ^( READ_KW c= read_list[symTab] )
 					{
-					match(input,READ_KW,FOLLOW_READ_KW_in_statement431); 
+					match(input,READ_KW,FOLLOW_READ_KW_in_statement437); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_read_list_in_statement435);
+					pushFollow(FOLLOW_read_list_in_statement441);
 					c=read_list(symTab);
 					state._fsp--;
 
@@ -616,29 +645,29 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 5 :
-					// ./src/VSLTreeParser.g:121:7: ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? )
+					// ./src/VSLTreeParser.g:125:7: ^( IF_KW e= expression[symTab] cIf= statement[symTab] (cElse= statement[symTab] )? )
 					{
-					match(input,IF_KW,FOLLOW_IF_KW_in_statement452); 
+					match(input,IF_KW,FOLLOW_IF_KW_in_statement458); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_statement456);
+					pushFollow(FOLLOW_expression_in_statement462);
 					e=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_statement_in_statement461);
+					pushFollow(FOLLOW_statement_in_statement467);
 					cIf=statement(symTab);
 					state._fsp--;
 
-					// ./src/VSLTreeParser.g:121:58: (cElse= statement[symTab] )?
-					int alt5=2;
-					int LA5_0 = input.LA(1);
-					if ( (LA5_0==ASSIGN_KW||LA5_0==IF_KW||LA5_0==PRINT_KW||(LA5_0 >= READ_KW && LA5_0 <= RETURN_KW)||LA5_0==WHILE_KW||LA5_0==BLOCK||LA5_0==FCALL_S) ) {
-						alt5=1;
+					// ./src/VSLTreeParser.g:125:58: (cElse= statement[symTab] )?
+					int alt6=2;
+					int LA6_0 = input.LA(1);
+					if ( (LA6_0==ASSIGN_KW||LA6_0==IF_KW||LA6_0==PRINT_KW||(LA6_0 >= READ_KW && LA6_0 <= RETURN_KW)||LA6_0==WHILE_KW||LA6_0==BLOCK||LA6_0==FCALL_S) ) {
+						alt6=1;
 					}
-					switch (alt5) {
+					switch (alt6) {
 						case 1 :
-							// ./src/VSLTreeParser.g:121:59: cElse= statement[symTab]
+							// ./src/VSLTreeParser.g:125:59: cElse= statement[symTab]
 							{
-							pushFollow(FOLLOW_statement_in_statement467);
+							pushFollow(FOLLOW_statement_in_statement473);
 							cElse=statement(symTab);
 							state._fsp--;
 
@@ -658,15 +687,15 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 6 :
-					// ./src/VSLTreeParser.g:128:7: ^( WHILE_KW e= expression[symTab] c= statement[symTab] )
+					// ./src/VSLTreeParser.g:132:7: ^( WHILE_KW e= expression[symTab] c= statement[symTab] )
 					{
-					match(input,WHILE_KW,FOLLOW_WHILE_KW_in_statement487); 
+					match(input,WHILE_KW,FOLLOW_WHILE_KW_in_statement493); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_statement491);
+					pushFollow(FOLLOW_expression_in_statement497);
 					e=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_statement_in_statement497);
+					pushFollow(FOLLOW_statement_in_statement503);
 					c=statement(symTab);
 					state._fsp--;
 
@@ -678,22 +707,22 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 7 :
-					// ./src/VSLTreeParser.g:132:7: ^( FCALL_S i= IDENT (c= argument_list[symTab] )? )
+					// ./src/VSLTreeParser.g:136:7: ^( FCALL_S i= IDENT (c= argument_list[symTab] )? )
 					{
-					match(input,FCALL_S,FOLLOW_FCALL_S_in_statement515); 
+					match(input,FCALL_S,FOLLOW_FCALL_S_in_statement521); 
 					match(input, Token.DOWN, null); 
-					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_statement519); 
-					// ./src/VSLTreeParser.g:132:26: (c= argument_list[symTab] )?
-					int alt6=2;
-					int LA6_0 = input.LA(1);
-					if ( (LA6_0==DIV||LA6_0==IDENT||LA6_0==INTEGER||(LA6_0 >= MINUS && LA6_0 <= MUL)||LA6_0==PLUS||LA6_0==FCALL) ) {
-						alt6=1;
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_statement525); 
+					// ./src/VSLTreeParser.g:136:26: (c= argument_list[symTab] )?
+					int alt7=2;
+					int LA7_0 = input.LA(1);
+					if ( (LA7_0==DIV||LA7_0==IDENT||LA7_0==INTEGER||(LA7_0 >= MINUS && LA7_0 <= MUL)||LA7_0==PLUS||LA7_0==FCALL) ) {
+						alt7=1;
 					}
-					switch (alt6) {
+					switch (alt7) {
 						case 1 :
-							// ./src/VSLTreeParser.g:132:26: c= argument_list[symTab]
+							// ./src/VSLTreeParser.g:136:26: c= argument_list[symTab]
 							{
-							pushFollow(FOLLOW_argument_list_in_statement523);
+							pushFollow(FOLLOW_argument_list_in_statement529);
 							c=argument_list(symTab);
 							state._fsp--;
 
@@ -710,9 +739,9 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 8 :
-					// ./src/VSLTreeParser.g:136:7: c= block[symTab]
+					// ./src/VSLTreeParser.g:140:7: c= block[symTab]
 					{
-					pushFollow(FOLLOW_block_in_statement542);
+					pushFollow(FOLLOW_block_in_statement548);
 					c=block(symTab);
 					state._fsp--;
 
@@ -738,7 +767,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "block"
-	// ./src/VSLTreeParser.g:142:1: block[SymbolTable symTab] returns [Code3a code] : ( ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] ) | ^( BLOCK c= inst_list[symTab] ) );
+	// ./src/VSLTreeParser.g:146:1: block[SymbolTable symTab] returns [Code3a code] : ( ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] ) | ^( BLOCK c= inst_list[symTab] ) );
 	public final Code3a block(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -748,18 +777,18 @@ public class VSLTreeParser extends TreeParser {
 		Code3a c =null;
 
 		try {
-			// ./src/VSLTreeParser.g:143:5: ( ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] ) | ^( BLOCK c= inst_list[symTab] ) )
-			int alt8=2;
-			int LA8_0 = input.LA(1);
-			if ( (LA8_0==BLOCK) ) {
-				int LA8_1 = input.LA(2);
-				if ( (LA8_1==DOWN) ) {
-					int LA8_2 = input.LA(3);
-					if ( (LA8_2==DECL) ) {
-						alt8=1;
+			// ./src/VSLTreeParser.g:147:5: ( ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] ) | ^( BLOCK c= inst_list[symTab] ) )
+			int alt9=2;
+			int LA9_0 = input.LA(1);
+			if ( (LA9_0==BLOCK) ) {
+				int LA9_1 = input.LA(2);
+				if ( (LA9_1==DOWN) ) {
+					int LA9_2 = input.LA(3);
+					if ( (LA9_2==DECL) ) {
+						alt9=1;
 					}
-					else if ( (LA8_2==INST) ) {
-						alt8=2;
+					else if ( (LA9_2==INST) ) {
+						alt9=2;
 					}
 
 					else {
@@ -769,7 +798,7 @@ public class VSLTreeParser extends TreeParser {
 								input.consume();
 							}
 							NoViableAltException nvae =
-								new NoViableAltException("", 8, 2, input);
+								new NoViableAltException("", 9, 2, input);
 							throw nvae;
 						} finally {
 							input.rewind(nvaeMark);
@@ -783,7 +812,7 @@ public class VSLTreeParser extends TreeParser {
 					try {
 						input.consume();
 						NoViableAltException nvae =
-							new NoViableAltException("", 8, 1, input);
+							new NoViableAltException("", 9, 1, input);
 						throw nvae;
 					} finally {
 						input.rewind(nvaeMark);
@@ -794,24 +823,24 @@ public class VSLTreeParser extends TreeParser {
 
 			else {
 				NoViableAltException nvae =
-					new NoViableAltException("", 8, 0, input);
+					new NoViableAltException("", 9, 0, input);
 				throw nvae;
 			}
 
-			switch (alt8) {
+			switch (alt9) {
 				case 1 :
-					// ./src/VSLTreeParser.g:144:5: ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] )
+					// ./src/VSLTreeParser.g:148:5: ^( BLOCK cDecl= declaration[symTab] cInst= inst_list[symTab] )
 					{
 
 					    	symTab.enterScope();
 					    
-					match(input,BLOCK,FOLLOW_BLOCK_in_block585); 
+					match(input,BLOCK,FOLLOW_BLOCK_in_block590); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_declaration_in_block589);
+					pushFollow(FOLLOW_declaration_in_block594);
 					cDecl=declaration(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_inst_list_in_block594);
+					pushFollow(FOLLOW_inst_list_in_block599);
 					cInst=inst_list(symTab);
 					state._fsp--;
 
@@ -821,17 +850,17 @@ public class VSLTreeParser extends TreeParser {
 					    	
 					    	code=cDecl;
 					    	code.append(cInst);
-					    	symTab.leaveScope();
+					    	symTab.leaveScope(); 
 							
 					    
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:155:7: ^( BLOCK c= inst_list[symTab] )
+					// ./src/VSLTreeParser.g:159:7: ^( BLOCK c= inst_list[symTab] )
 					{
-					match(input,BLOCK,FOLLOW_BLOCK_in_block611); 
+					match(input,BLOCK,FOLLOW_BLOCK_in_block616); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_inst_list_in_block615);
+					pushFollow(FOLLOW_inst_list_in_block620);
 					c=inst_list(symTab);
 					state._fsp--;
 
@@ -861,7 +890,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "array_elem"
-	// ./src/VSLTreeParser.g:163:1: array_elem[SymbolTable symTab] returns [Code3a code] : ^( ARELEM i= IDENT e= expression[symTab] ) ;
+	// ./src/VSLTreeParser.g:167:1: array_elem[SymbolTable symTab] returns [Code3a code] : ^( ARELEM i= IDENT e= expression[symTab] ) ;
 	public final Code3a array_elem(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -870,13 +899,13 @@ public class VSLTreeParser extends TreeParser {
 		ExpAttribute e =null;
 
 		try {
-			// ./src/VSLTreeParser.g:164:5: ( ^( ARELEM i= IDENT e= expression[symTab] ) )
-			// ./src/VSLTreeParser.g:164:7: ^( ARELEM i= IDENT e= expression[symTab] )
+			// ./src/VSLTreeParser.g:168:5: ( ^( ARELEM i= IDENT e= expression[symTab] ) )
+			// ./src/VSLTreeParser.g:168:7: ^( ARELEM i= IDENT e= expression[symTab] )
 			{
-			match(input,ARELEM,FOLLOW_ARELEM_in_array_elem649); 
+			match(input,ARELEM,FOLLOW_ARELEM_in_array_elem654); 
 			match(input, Token.DOWN, null); 
-			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_array_elem654); 
-			pushFollow(FOLLOW_expression_in_array_elem658);
+			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_array_elem659); 
+			pushFollow(FOLLOW_expression_in_array_elem663);
 			e=expression(symTab);
 			state._fsp--;
 
@@ -904,7 +933,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "inst_list"
-	// ./src/VSLTreeParser.g:172:1: inst_list[SymbolTable symTab] returns [Code3a code] : ^( INST (c= statement[symTab] )+ ) ;
+	// ./src/VSLTreeParser.g:176:1: inst_list[SymbolTable symTab] returns [Code3a code] : ^( INST (c= statement[symTab] )+ ) ;
 	public final Code3a inst_list(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -912,29 +941,29 @@ public class VSLTreeParser extends TreeParser {
 		Code3a c =null;
 
 		try {
-			// ./src/VSLTreeParser.g:173:5: ( ^( INST (c= statement[symTab] )+ ) )
-			// ./src/VSLTreeParser.g:174:2: ^( INST (c= statement[symTab] )+ )
+			// ./src/VSLTreeParser.g:177:5: ( ^( INST (c= statement[symTab] )+ ) )
+			// ./src/VSLTreeParser.g:178:2: ^( INST (c= statement[symTab] )+ )
 			{
 
 					code = new Code3a();
 				
-			match(input,INST,FOLLOW_INST_in_inst_list694); 
+			match(input,INST,FOLLOW_INST_in_inst_list699); 
 			match(input, Token.DOWN, null); 
-			// ./src/VSLTreeParser.g:177:9: (c= statement[symTab] )+
-			int cnt9=0;
-			loop9:
+			// ./src/VSLTreeParser.g:181:9: (c= statement[symTab] )+
+			int cnt10=0;
+			loop10:
 			while (true) {
-				int alt9=2;
-				int LA9_0 = input.LA(1);
-				if ( (LA9_0==ASSIGN_KW||LA9_0==IF_KW||LA9_0==PRINT_KW||(LA9_0 >= READ_KW && LA9_0 <= RETURN_KW)||LA9_0==WHILE_KW||LA9_0==BLOCK||LA9_0==FCALL_S) ) {
-					alt9=1;
+				int alt10=2;
+				int LA10_0 = input.LA(1);
+				if ( (LA10_0==ASSIGN_KW||LA10_0==IF_KW||LA10_0==PRINT_KW||(LA10_0 >= READ_KW && LA10_0 <= RETURN_KW)||LA10_0==WHILE_KW||LA10_0==BLOCK||LA10_0==FCALL_S) ) {
+					alt10=1;
 				}
 
-				switch (alt9) {
+				switch (alt10) {
 				case 1 :
-					// ./src/VSLTreeParser.g:177:10: c= statement[symTab]
+					// ./src/VSLTreeParser.g:181:10: c= statement[symTab]
 					{
-					pushFollow(FOLLOW_statement_in_inst_list699);
+					pushFollow(FOLLOW_statement_in_inst_list704);
 					c=statement(symTab);
 					state._fsp--;
 
@@ -945,11 +974,11 @@ public class VSLTreeParser extends TreeParser {
 					break;
 
 				default :
-					if ( cnt9 >= 1 ) break loop9;
-					EarlyExitException eee = new EarlyExitException(9, input);
+					if ( cnt10 >= 1 ) break loop10;
+					EarlyExitException eee = new EarlyExitException(10, input);
 					throw eee;
 				}
-				cnt9++;
+				cnt10++;
 			}
 
 			match(input, Token.UP, null); 
@@ -971,7 +1000,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "expression"
-	// ./src/VSLTreeParser.g:185:1: expression[SymbolTable symTab] returns [ExpAttribute expAtt] : ( ^( PLUS e1= expression[symTab] e2= expression[symTab] ) | ^( MUL e1= expression[symTab] e2= expression[symTab] ) | ^( DIV e1= expression[symTab] e2= expression[symTab] ) | ^( MINUS e1= expression[symTab] e2= expression[symTab] ) |pe= primary[symTab] );
+	// ./src/VSLTreeParser.g:189:1: expression[SymbolTable symTab] returns [ExpAttribute expAtt] : ( ^( PLUS e1= expression[symTab] e2= expression[symTab] ) | ^( MUL e1= expression[symTab] e2= expression[symTab] ) | ^( DIV e1= expression[symTab] e2= expression[symTab] ) | ^( MINUS e1= expression[symTab] e2= expression[symTab] ) |pe= primary[symTab] );
 	public final ExpAttribute expression(SymbolTable symTab) throws RecognitionException {
 		ExpAttribute expAtt = null;
 
@@ -981,52 +1010,52 @@ public class VSLTreeParser extends TreeParser {
 		ExpAttribute pe =null;
 
 		try {
-			// ./src/VSLTreeParser.g:186:3: ( ^( PLUS e1= expression[symTab] e2= expression[symTab] ) | ^( MUL e1= expression[symTab] e2= expression[symTab] ) | ^( DIV e1= expression[symTab] e2= expression[symTab] ) | ^( MINUS e1= expression[symTab] e2= expression[symTab] ) |pe= primary[symTab] )
-			int alt10=5;
+			// ./src/VSLTreeParser.g:190:3: ( ^( PLUS e1= expression[symTab] e2= expression[symTab] ) | ^( MUL e1= expression[symTab] e2= expression[symTab] ) | ^( DIV e1= expression[symTab] e2= expression[symTab] ) | ^( MINUS e1= expression[symTab] e2= expression[symTab] ) |pe= primary[symTab] )
+			int alt11=5;
 			switch ( input.LA(1) ) {
 			case PLUS:
 				{
-				alt10=1;
+				alt11=1;
 				}
 				break;
 			case MUL:
 				{
-				alt10=2;
+				alt11=2;
 				}
 				break;
 			case DIV:
 				{
-				alt10=3;
+				alt11=3;
 				}
 				break;
 			case MINUS:
 				{
-				alt10=4;
+				alt11=4;
 				}
 				break;
 			case IDENT:
 			case INTEGER:
 			case FCALL:
 				{
-				alt10=5;
+				alt11=5;
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 10, 0, input);
+					new NoViableAltException("", 11, 0, input);
 				throw nvae;
 			}
-			switch (alt10) {
+			switch (alt11) {
 				case 1 :
-					// ./src/VSLTreeParser.g:186:5: ^( PLUS e1= expression[symTab] e2= expression[symTab] )
+					// ./src/VSLTreeParser.g:190:5: ^( PLUS e1= expression[symTab] e2= expression[symTab] )
 					{
-					match(input,PLUS,FOLLOW_PLUS_in_expression739); 
+					match(input,PLUS,FOLLOW_PLUS_in_expression744); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_expression743);
+					pushFollow(FOLLOW_expression_in_expression748);
 					e1=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_expression_in_expression748);
+					pushFollow(FOLLOW_expression_in_expression753);
 					e2=expression(symTab);
 					state._fsp--;
 
@@ -1041,15 +1070,15 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:193:4: ^( MUL e1= expression[symTab] e2= expression[symTab] )
+					// ./src/VSLTreeParser.g:197:4: ^( MUL e1= expression[symTab] e2= expression[symTab] )
 					{
-					match(input,MUL,FOLLOW_MUL_in_expression763); 
+					match(input,MUL,FOLLOW_MUL_in_expression768); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_expression767);
+					pushFollow(FOLLOW_expression_in_expression772);
 					e1=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_expression_in_expression772);
+					pushFollow(FOLLOW_expression_in_expression777);
 					e2=expression(symTab);
 					state._fsp--;
 
@@ -1064,15 +1093,15 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 3 :
-					// ./src/VSLTreeParser.g:200:4: ^( DIV e1= expression[symTab] e2= expression[symTab] )
+					// ./src/VSLTreeParser.g:204:4: ^( DIV e1= expression[symTab] e2= expression[symTab] )
 					{
-					match(input,DIV,FOLLOW_DIV_in_expression787); 
+					match(input,DIV,FOLLOW_DIV_in_expression792); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_expression791);
+					pushFollow(FOLLOW_expression_in_expression796);
 					e1=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_expression_in_expression796);
+					pushFollow(FOLLOW_expression_in_expression801);
 					e2=expression(symTab);
 					state._fsp--;
 
@@ -1087,15 +1116,15 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 4 :
-					// ./src/VSLTreeParser.g:207:4: ^( MINUS e1= expression[symTab] e2= expression[symTab] )
+					// ./src/VSLTreeParser.g:211:4: ^( MINUS e1= expression[symTab] e2= expression[symTab] )
 					{
-					match(input,MINUS,FOLLOW_MINUS_in_expression811); 
+					match(input,MINUS,FOLLOW_MINUS_in_expression816); 
 					match(input, Token.DOWN, null); 
-					pushFollow(FOLLOW_expression_in_expression815);
+					pushFollow(FOLLOW_expression_in_expression820);
 					e1=expression(symTab);
 					state._fsp--;
 
-					pushFollow(FOLLOW_expression_in_expression820);
+					pushFollow(FOLLOW_expression_in_expression825);
 					e2=expression(symTab);
 					state._fsp--;
 
@@ -1110,9 +1139,9 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 5 :
-					// ./src/VSLTreeParser.g:214:5: pe= primary[symTab]
+					// ./src/VSLTreeParser.g:218:5: pe= primary[symTab]
 					{
-					pushFollow(FOLLOW_primary_in_expression837);
+					pushFollow(FOLLOW_primary_in_expression842);
 					pe=primary(symTab);
 					state._fsp--;
 
@@ -1138,7 +1167,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "primary"
-	// ./src/VSLTreeParser.g:222:1: primary[SymbolTable symTab] returns [ExpAttribute expAtt] : (i= INTEGER |i= IDENT | ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? ) );
+	// ./src/VSLTreeParser.g:226:1: primary[SymbolTable symTab] returns [ExpAttribute expAtt] : (i= INTEGER |i= IDENT | ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? ) );
 	public final ExpAttribute primary(SymbolTable symTab) throws RecognitionException {
 		ExpAttribute expAtt = null;
 
@@ -1147,34 +1176,34 @@ public class VSLTreeParser extends TreeParser {
 		Code3a ctmp =null;
 
 		try {
-			// ./src/VSLTreeParser.g:223:2: (i= INTEGER |i= IDENT | ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? ) )
-			int alt12=3;
+			// ./src/VSLTreeParser.g:227:2: (i= INTEGER |i= IDENT | ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? ) )
+			int alt13=3;
 			switch ( input.LA(1) ) {
 			case INTEGER:
 				{
-				alt12=1;
+				alt13=1;
 				}
 				break;
 			case IDENT:
 				{
-				alt12=2;
+				alt13=2;
 				}
 				break;
 			case FCALL:
 				{
-				alt12=3;
+				alt13=3;
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 12, 0, input);
+					new NoViableAltException("", 13, 0, input);
 				throw nvae;
 			}
-			switch (alt12) {
+			switch (alt13) {
 				case 1 :
-					// ./src/VSLTreeParser.g:223:4: i= INTEGER
+					// ./src/VSLTreeParser.g:227:4: i= INTEGER
 					{
-					i=(CommonTree)match(input,INTEGER,FOLLOW_INTEGER_in_primary864); 
+					i=(CommonTree)match(input,INTEGER,FOLLOW_INTEGER_in_primary869); 
 
 							ConstSymbol cs = new ConstSymbol(Integer.parseInt(i.getText()));
 							expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
@@ -1182,9 +1211,9 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:228:4: i= IDENT
+					// ./src/VSLTreeParser.g:232:4: i= IDENT
 					{
-					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primary877); 
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primary882); 
 
 					      Operand3a id = symTab.lookup(i.getText());
 					      if (id ==null){
@@ -1197,26 +1226,26 @@ public class VSLTreeParser extends TreeParser {
 					}
 					break;
 				case 3 :
-					// ./src/VSLTreeParser.g:239:2: ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? )
+					// ./src/VSLTreeParser.g:243:2: ^( FCALL i= IDENT (ctmp= argument_list[symTab] )? )
 					{
 
 							Code3a c = new Code3a();
 							Code3a cArg = new Code3a();
 						
-					match(input,FCALL,FOLLOW_FCALL_in_primary894); 
+					match(input,FCALL,FOLLOW_FCALL_in_primary899); 
 					match(input, Token.DOWN, null); 
-					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primary898); 
-					// ./src/VSLTreeParser.g:243:18: (ctmp= argument_list[symTab] )?
-					int alt11=2;
-					int LA11_0 = input.LA(1);
-					if ( (LA11_0==DIV||LA11_0==IDENT||LA11_0==INTEGER||(LA11_0 >= MINUS && LA11_0 <= MUL)||LA11_0==PLUS||LA11_0==FCALL) ) {
-						alt11=1;
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primary903); 
+					// ./src/VSLTreeParser.g:247:18: (ctmp= argument_list[symTab] )?
+					int alt12=2;
+					int LA12_0 = input.LA(1);
+					if ( (LA12_0==DIV||LA12_0==IDENT||LA12_0==INTEGER||(LA12_0 >= MINUS && LA12_0 <= MUL)||LA12_0==PLUS||LA12_0==FCALL) ) {
+						alt12=1;
 					}
-					switch (alt11) {
+					switch (alt12) {
 						case 1 :
-							// ./src/VSLTreeParser.g:243:19: ctmp= argument_list[symTab]
+							// ./src/VSLTreeParser.g:247:19: ctmp= argument_list[symTab]
 							{
-							pushFollow(FOLLOW_argument_list_in_primary903);
+							pushFollow(FOLLOW_argument_list_in_primary908);
 							ctmp=argument_list(symTab);
 							state._fsp--;
 
@@ -1255,7 +1284,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "argument_list"
-	// ./src/VSLTreeParser.g:256:1: argument_list[SymbolTable symTab] returns [Code3a code] : (e= expression[symTab] )+ ;
+	// ./src/VSLTreeParser.g:260:1: argument_list[SymbolTable symTab] returns [Code3a code] : (e= expression[symTab] )+ ;
 	public final Code3a argument_list(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -1263,96 +1292,33 @@ public class VSLTreeParser extends TreeParser {
 		ExpAttribute e =null;
 
 		try {
-			// ./src/VSLTreeParser.g:257:5: ( (e= expression[symTab] )+ )
-			// ./src/VSLTreeParser.g:258:5: (e= expression[symTab] )+
+			// ./src/VSLTreeParser.g:261:5: ( (e= expression[symTab] )+ )
+			// ./src/VSLTreeParser.g:262:5: (e= expression[symTab] )+
 			{
 
 					code = new Code3a();
 				
-			// ./src/VSLTreeParser.g:261:2: (e= expression[symTab] )+
-			int cnt13=0;
-			loop13:
+			// ./src/VSLTreeParser.g:265:2: (e= expression[symTab] )+
+			int cnt14=0;
+			loop14:
 			while (true) {
-				int alt13=2;
-				int LA13_0 = input.LA(1);
-				if ( (LA13_0==DIV||LA13_0==IDENT||LA13_0==INTEGER||(LA13_0 >= MINUS && LA13_0 <= MUL)||LA13_0==PLUS||LA13_0==FCALL) ) {
-					alt13=1;
+				int alt14=2;
+				int LA14_0 = input.LA(1);
+				if ( (LA14_0==DIV||LA14_0==IDENT||LA14_0==INTEGER||(LA14_0 >= MINUS && LA14_0 <= MUL)||LA14_0==PLUS||LA14_0==FCALL) ) {
+					alt14=1;
 				}
 
-				switch (alt13) {
+				switch (alt14) {
 				case 1 :
-					// ./src/VSLTreeParser.g:261:3: e= expression[symTab]
+					// ./src/VSLTreeParser.g:265:3: e= expression[symTab]
 					{
-					pushFollow(FOLLOW_expression_in_argument_list953);
+					pushFollow(FOLLOW_expression_in_argument_list958);
 					e=expression(symTab);
 					state._fsp--;
 
 
 							code.append(Code3aGenerator.genArg(e.place));
 						
-					}
-					break;
-
-				default :
-					if ( cnt13 >= 1 ) break loop13;
-					EarlyExitException eee = new EarlyExitException(13, input);
-					throw eee;
-				}
-				cnt13++;
-			}
-
-			}
-
-		}
-		catch (RecognitionException re) {
-			reportError(re);
-			recover(input,re);
-		}
-		finally {
-			// do for sure before leaving
-		}
-		return code;
-	}
-	// $ANTLR end "argument_list"
-
-
-
-	// $ANTLR start "print_list"
-	// ./src/VSLTreeParser.g:268:1: print_list[SymbolTable symTab] returns [Code3a code] : (c= print_item[symTab] )+ ;
-	public final Code3a print_list(SymbolTable symTab) throws RecognitionException {
-		Code3a code = null;
-
-
-		Code3a c =null;
-
-		try {
-			// ./src/VSLTreeParser.g:269:5: ( (c= print_item[symTab] )+ )
-			// ./src/VSLTreeParser.g:270:2: (c= print_item[symTab] )+
-			{
-
-					code = new Code3a();
-				
-			// ./src/VSLTreeParser.g:273:2: (c= print_item[symTab] )+
-			int cnt14=0;
-			loop14:
-			while (true) {
-				int alt14=2;
-				int LA14_0 = input.LA(1);
-				if ( (LA14_0==DIV||LA14_0==IDENT||LA14_0==INTEGER||(LA14_0 >= MINUS && LA14_0 <= MUL)||LA14_0==PLUS||LA14_0==TEXT||LA14_0==FCALL) ) {
-					alt14=1;
-				}
-
-				switch (alt14) {
-				case 1 :
-					// ./src/VSLTreeParser.g:273:3: c= print_item[symTab]
-					{
-					pushFollow(FOLLOW_print_item_in_print_list991);
-					c=print_item(symTab);
-					state._fsp--;
-
-
-					    	code.append(c);
-					    
 					}
 					break;
 
@@ -1376,12 +1342,75 @@ public class VSLTreeParser extends TreeParser {
 		}
 		return code;
 	}
+	// $ANTLR end "argument_list"
+
+
+
+	// $ANTLR start "print_list"
+	// ./src/VSLTreeParser.g:272:1: print_list[SymbolTable symTab] returns [Code3a code] : (c= print_item[symTab] )+ ;
+	public final Code3a print_list(SymbolTable symTab) throws RecognitionException {
+		Code3a code = null;
+
+
+		Code3a c =null;
+
+		try {
+			// ./src/VSLTreeParser.g:273:5: ( (c= print_item[symTab] )+ )
+			// ./src/VSLTreeParser.g:274:2: (c= print_item[symTab] )+
+			{
+
+					code = new Code3a();
+				
+			// ./src/VSLTreeParser.g:277:2: (c= print_item[symTab] )+
+			int cnt15=0;
+			loop15:
+			while (true) {
+				int alt15=2;
+				int LA15_0 = input.LA(1);
+				if ( (LA15_0==DIV||LA15_0==IDENT||LA15_0==INTEGER||(LA15_0 >= MINUS && LA15_0 <= MUL)||LA15_0==PLUS||LA15_0==TEXT||LA15_0==FCALL) ) {
+					alt15=1;
+				}
+
+				switch (alt15) {
+				case 1 :
+					// ./src/VSLTreeParser.g:277:3: c= print_item[symTab]
+					{
+					pushFollow(FOLLOW_print_item_in_print_list996);
+					c=print_item(symTab);
+					state._fsp--;
+
+
+					    	code.append(c);
+					    
+					}
+					break;
+
+				default :
+					if ( cnt15 >= 1 ) break loop15;
+					EarlyExitException eee = new EarlyExitException(15, input);
+					throw eee;
+				}
+				cnt15++;
+			}
+
+			}
+
+		}
+		catch (RecognitionException re) {
+			reportError(re);
+			recover(input,re);
+		}
+		finally {
+			// do for sure before leaving
+		}
+		return code;
+	}
 	// $ANTLR end "print_list"
 
 
 
 	// $ANTLR start "print_item"
-	// ./src/VSLTreeParser.g:281:1: print_item[SymbolTable symTab] returns [Code3a code] : (s= TEXT |e= expression[symTab] );
+	// ./src/VSLTreeParser.g:285:1: print_item[SymbolTable symTab] returns [Code3a code] : (s= TEXT |e= expression[symTab] );
 	public final Code3a print_item(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -1390,36 +1419,36 @@ public class VSLTreeParser extends TreeParser {
 		ExpAttribute e =null;
 
 		try {
-			// ./src/VSLTreeParser.g:282:5: (s= TEXT |e= expression[symTab] )
-			int alt15=2;
-			int LA15_0 = input.LA(1);
-			if ( (LA15_0==TEXT) ) {
-				alt15=1;
+			// ./src/VSLTreeParser.g:286:5: (s= TEXT |e= expression[symTab] )
+			int alt16=2;
+			int LA16_0 = input.LA(1);
+			if ( (LA16_0==TEXT) ) {
+				alt16=1;
 			}
-			else if ( (LA15_0==DIV||LA15_0==IDENT||LA15_0==INTEGER||(LA15_0 >= MINUS && LA15_0 <= MUL)||LA15_0==PLUS||LA15_0==FCALL) ) {
-				alt15=2;
+			else if ( (LA16_0==DIV||LA16_0==IDENT||LA16_0==INTEGER||(LA16_0 >= MINUS && LA16_0 <= MUL)||LA16_0==PLUS||LA16_0==FCALL) ) {
+				alt16=2;
 			}
 
 			else {
 				NoViableAltException nvae =
-					new NoViableAltException("", 15, 0, input);
+					new NoViableAltException("", 16, 0, input);
 				throw nvae;
 			}
 
-			switch (alt15) {
+			switch (alt16) {
 				case 1 :
-					// ./src/VSLTreeParser.g:282:7: s= TEXT
+					// ./src/VSLTreeParser.g:286:7: s= TEXT
 					{
-					s=(CommonTree)match(input,TEXT,FOLLOW_TEXT_in_print_item1032); 
+					s=(CommonTree)match(input,TEXT,FOLLOW_TEXT_in_print_item1037); 
 							
 					    	code = Code3aGenerator.genPrintS(new Data3a(s.getText()));
 					    
 					}
 					break;
 				case 2 :
-					// ./src/VSLTreeParser.g:286:7: e= expression[symTab]
+					// ./src/VSLTreeParser.g:290:7: e= expression[symTab]
 					{
-					pushFollow(FOLLOW_expression_in_print_item1048);
+					pushFollow(FOLLOW_expression_in_print_item1053);
 					e=expression(symTab);
 					state._fsp--;
 
@@ -1446,7 +1475,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "read_list"
-	// ./src/VSLTreeParser.g:293:1: read_list[SymbolTable symTab] returns [Code3a code] : (c= read_item[symTab] )+ ;
+	// ./src/VSLTreeParser.g:297:1: read_list[SymbolTable symTab] returns [Code3a code] : (c= read_item[symTab] )+ ;
 	public final Code3a read_list(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -1454,27 +1483,27 @@ public class VSLTreeParser extends TreeParser {
 		Code3a c =null;
 
 		try {
-			// ./src/VSLTreeParser.g:294:5: ( (c= read_item[symTab] )+ )
-			// ./src/VSLTreeParser.g:295:5: (c= read_item[symTab] )+
+			// ./src/VSLTreeParser.g:298:5: ( (c= read_item[symTab] )+ )
+			// ./src/VSLTreeParser.g:299:5: (c= read_item[symTab] )+
 			{
 
 					code = new Code3a();
 				
-			// ./src/VSLTreeParser.g:298:2: (c= read_item[symTab] )+
-			int cnt16=0;
-			loop16:
+			// ./src/VSLTreeParser.g:302:2: (c= read_item[symTab] )+
+			int cnt17=0;
+			loop17:
 			while (true) {
-				int alt16=2;
-				int LA16_0 = input.LA(1);
-				if ( (LA16_0==IDENT) ) {
-					alt16=1;
+				int alt17=2;
+				int LA17_0 = input.LA(1);
+				if ( (LA17_0==IDENT) ) {
+					alt17=1;
 				}
 
-				switch (alt16) {
+				switch (alt17) {
 				case 1 :
-					// ./src/VSLTreeParser.g:298:3: c= read_item[symTab]
+					// ./src/VSLTreeParser.g:302:3: c= read_item[symTab]
 					{
-					pushFollow(FOLLOW_read_item_in_read_list1093);
+					pushFollow(FOLLOW_read_item_in_read_list1098);
 					c=read_item(symTab);
 					state._fsp--;
 
@@ -1485,11 +1514,11 @@ public class VSLTreeParser extends TreeParser {
 					break;
 
 				default :
-					if ( cnt16 >= 1 ) break loop16;
-					EarlyExitException eee = new EarlyExitException(16, input);
+					if ( cnt17 >= 1 ) break loop17;
+					EarlyExitException eee = new EarlyExitException(17, input);
 					throw eee;
 				}
-				cnt16++;
+				cnt17++;
 			}
 
 			}
@@ -1509,7 +1538,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "read_item"
-	// ./src/VSLTreeParser.g:305:1: read_item[SymbolTable symTab] returns [Code3a code] : i= IDENT ;
+	// ./src/VSLTreeParser.g:309:1: read_item[SymbolTable symTab] returns [Code3a code] : i= IDENT ;
 	public final Code3a read_item(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -1517,10 +1546,10 @@ public class VSLTreeParser extends TreeParser {
 		CommonTree i=null;
 
 		try {
-			// ./src/VSLTreeParser.g:306:5: (i= IDENT )
-			// ./src/VSLTreeParser.g:307:5: i= IDENT
+			// ./src/VSLTreeParser.g:310:5: (i= IDENT )
+			// ./src/VSLTreeParser.g:311:5: i= IDENT
 			{
-			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_read_item1137); 
+			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_read_item1142); 
 
 			    VarSymbol var = (VarSymbol) symTab.lookup(i.getText());
 			    if (var== null){
@@ -1546,7 +1575,7 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "declaration"
-	// ./src/VSLTreeParser.g:324:1: declaration[SymbolTable symTab] returns [Code3a code] : ^( DECL (c= decl_item[symTab] )+ ) ;
+	// ./src/VSLTreeParser.g:328:1: declaration[SymbolTable symTab] returns [Code3a code] : ^( DECL (c= decl_item[symTab] )+ ) ;
 	public final Code3a declaration(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
@@ -1554,29 +1583,29 @@ public class VSLTreeParser extends TreeParser {
 		Code3a c =null;
 
 		try {
-			// ./src/VSLTreeParser.g:325:5: ( ^( DECL (c= decl_item[symTab] )+ ) )
-			// ./src/VSLTreeParser.g:326:5: ^( DECL (c= decl_item[symTab] )+ )
+			// ./src/VSLTreeParser.g:329:5: ( ^( DECL (c= decl_item[symTab] )+ ) )
+			// ./src/VSLTreeParser.g:330:5: ^( DECL (c= decl_item[symTab] )+ )
 			{
 
 					code = new Code3a();
 				
-			match(input,DECL,FOLLOW_DECL_in_declaration1187); 
+			match(input,DECL,FOLLOW_DECL_in_declaration1192); 
 			match(input, Token.DOWN, null); 
-			// ./src/VSLTreeParser.g:329:12: (c= decl_item[symTab] )+
-			int cnt17=0;
-			loop17:
+			// ./src/VSLTreeParser.g:333:12: (c= decl_item[symTab] )+
+			int cnt18=0;
+			loop18:
 			while (true) {
-				int alt17=2;
-				int LA17_0 = input.LA(1);
-				if ( (LA17_0==IDENT) ) {
-					alt17=1;
+				int alt18=2;
+				int LA18_0 = input.LA(1);
+				if ( (LA18_0==IDENT) ) {
+					alt18=1;
 				}
 
-				switch (alt17) {
+				switch (alt18) {
 				case 1 :
-					// ./src/VSLTreeParser.g:329:13: c= decl_item[symTab]
+					// ./src/VSLTreeParser.g:333:13: c= decl_item[symTab]
 					{
-					pushFollow(FOLLOW_decl_item_in_declaration1192);
+					pushFollow(FOLLOW_decl_item_in_declaration1197);
 					c=decl_item(symTab);
 					state._fsp--;
 
@@ -1590,11 +1619,11 @@ public class VSLTreeParser extends TreeParser {
 					break;
 
 				default :
-					if ( cnt17 >= 1 ) break loop17;
-					EarlyExitException eee = new EarlyExitException(17, input);
+					if ( cnt18 >= 1 ) break loop18;
+					EarlyExitException eee = new EarlyExitException(18, input);
 					throw eee;
 				}
-				cnt17++;
+				cnt18++;
 			}
 
 			match(input, Token.UP, null); 
@@ -1616,27 +1645,77 @@ public class VSLTreeParser extends TreeParser {
 
 
 	// $ANTLR start "decl_item"
-	// ./src/VSLTreeParser.g:340:1: decl_item[SymbolTable symTab] returns [Code3a code] : i= IDENT ;
+	// ./src/VSLTreeParser.g:344:1: decl_item[SymbolTable symTab] returns [Code3a code] : (i= IDENT |i= IDENT cons= INTEGER );
 	public final Code3a decl_item(SymbolTable symTab) throws RecognitionException {
 		Code3a code = null;
 
 
 		CommonTree i=null;
+		CommonTree cons=null;
 
 		try {
-			// ./src/VSLTreeParser.g:341:5: (i= IDENT )
-			// ./src/VSLTreeParser.g:341:8: i= IDENT
-			{
-			i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_decl_item1235); 
+			// ./src/VSLTreeParser.g:345:5: (i= IDENT |i= IDENT cons= INTEGER )
+			int alt19=2;
+			int LA19_0 = input.LA(1);
+			if ( (LA19_0==IDENT) ) {
+				int LA19_1 = input.LA(2);
+				if ( (LA19_1==INTEGER) ) {
+					alt19=2;
+				}
+				else if ( (LA19_1==UP||LA19_1==IDENT) ) {
+					alt19=1;
+				}
 
-			    	
-			        VarSymbol  vs = TypeCheck.checkAndDeclIdent(i,i.getText(),Type.INT,symTab);
-			    	
-			    	code = Code3aGenerator.genVar(vs);
-			    	
-			    
+				else {
+					int nvaeMark = input.mark();
+					try {
+						input.consume();
+						NoViableAltException nvae =
+							new NoViableAltException("", 19, 1, input);
+						throw nvae;
+					} finally {
+						input.rewind(nvaeMark);
+					}
+				}
+
 			}
 
+			else {
+				NoViableAltException nvae =
+					new NoViableAltException("", 19, 0, input);
+				throw nvae;
+			}
+
+			switch (alt19) {
+				case 1 :
+					// ./src/VSLTreeParser.g:345:8: i= IDENT
+					{
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_decl_item1240); 
+
+					        VarSymbol  vs = TypeCheck.checkAndDeclIdent(i,i.getText(),Type.INT,symTab);
+					    	code = Code3aGenerator.genVar(vs);
+					    
+					}
+					break;
+				case 2 :
+					// ./src/VSLTreeParser.g:350:6: i= IDENT cons= INTEGER
+					{
+					i=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_decl_item1255); 
+					cons=(CommonTree)match(input,INTEGER,FOLLOW_INTEGER_in_decl_item1259); 
+
+					    	VarSymbol  vs = TypeCheck.checkAndDeclIdent(i,i.getText(),Type.INT,symTab);
+					    	
+					    	code = Code3aGenerator.genVar(vs);
+					    	
+					    	Operand3a test  = symTab.lookup(i.getText());
+					    	ConstSymbol cs = new ConstSymbol(Integer.parseInt(i.getText()));
+							ExpAttribute expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
+							code = Code3aGenerator.genAffect( test,expAtt);
+					    
+					}
+					break;
+
+			}
 		}
 		catch (RecognitionException re) {
 			reportError(re);
@@ -1666,67 +1745,70 @@ public class VSLTreeParser extends TreeParser {
 	public static final BitSet FOLLOW_PROTO_KW_in_proto206 = new BitSet(new long[]{0x0000000000000004L});
 	public static final BitSet FOLLOW_type_in_proto210 = new BitSet(new long[]{0x0000000000004000L});
 	public static final BitSet FOLLOW_IDENT_in_proto214 = new BitSet(new long[]{0x0000800000000000L});
-	public static final BitSet FOLLOW_param_list_in_proto216 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_INT_KW_in_type238 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_VOID_KW_in_type249 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_PARAM_in_param_list280 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_param_in_param_list285 = new BitSet(new long[]{0x0000000000004008L});
-	public static final BitSet FOLLOW_IDENT_in_param328 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_ASSIGN_KW_in_statement358 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_statement362 = new BitSet(new long[]{0x0000000000004000L});
-	public static final BitSet FOLLOW_IDENT_in_statement367 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_RETURN_KW_in_statement389 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_statement393 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_PRINT_KW_in_statement410 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_print_list_in_statement414 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_READ_KW_in_statement431 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_read_list_in_statement435 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_IF_KW_in_statement452 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_statement456 = new BitSet(new long[]{0x00002210C4008020L});
-	public static final BitSet FOLLOW_statement_in_statement461 = new BitSet(new long[]{0x00002210C4008028L});
-	public static final BitSet FOLLOW_statement_in_statement467 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_WHILE_KW_in_statement487 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_statement491 = new BitSet(new long[]{0x00002210C4008020L});
-	public static final BitSet FOLLOW_statement_in_statement497 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_FCALL_S_in_statement515 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_IDENT_in_statement519 = new BitSet(new long[]{0x0000100002C14208L});
-	public static final BitSet FOLLOW_argument_list_in_statement523 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_block_in_statement542 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_BLOCK_in_block585 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_declaration_in_block589 = new BitSet(new long[]{0x0000400000000000L});
-	public static final BitSet FOLLOW_inst_list_in_block594 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_BLOCK_in_block611 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_inst_list_in_block615 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_ARELEM_in_array_elem649 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_IDENT_in_array_elem654 = new BitSet(new long[]{0x0000100002C14200L});
-	public static final BitSet FOLLOW_expression_in_array_elem658 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_INST_in_inst_list694 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_statement_in_inst_list699 = new BitSet(new long[]{0x00002210C4008028L});
-	public static final BitSet FOLLOW_PLUS_in_expression739 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_expression743 = new BitSet(new long[]{0x0000100002C14200L});
-	public static final BitSet FOLLOW_expression_in_expression748 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_MUL_in_expression763 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_expression767 = new BitSet(new long[]{0x0000100002C14200L});
-	public static final BitSet FOLLOW_expression_in_expression772 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_DIV_in_expression787 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_expression791 = new BitSet(new long[]{0x0000100002C14200L});
-	public static final BitSet FOLLOW_expression_in_expression796 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_MINUS_in_expression811 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_expression_in_expression815 = new BitSet(new long[]{0x0000100002C14200L});
-	public static final BitSet FOLLOW_expression_in_expression820 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_primary_in_expression837 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_INTEGER_in_primary864 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_IDENT_in_primary877 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_FCALL_in_primary894 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_IDENT_in_primary898 = new BitSet(new long[]{0x0000100002C14208L});
-	public static final BitSet FOLLOW_argument_list_in_primary903 = new BitSet(new long[]{0x0000000000000008L});
-	public static final BitSet FOLLOW_expression_in_argument_list953 = new BitSet(new long[]{0x0000100002C14202L});
-	public static final BitSet FOLLOW_print_item_in_print_list991 = new BitSet(new long[]{0x0000100202C14202L});
-	public static final BitSet FOLLOW_TEXT_in_print_item1032 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_expression_in_print_item1048 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_read_item_in_read_list1093 = new BitSet(new long[]{0x0000000000004002L});
-	public static final BitSet FOLLOW_IDENT_in_read_item1137 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_DECL_in_declaration1187 = new BitSet(new long[]{0x0000000000000004L});
-	public static final BitSet FOLLOW_decl_item_in_declaration1192 = new BitSet(new long[]{0x0000000000004008L});
-	public static final BitSet FOLLOW_IDENT_in_decl_item1235 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_PARAM_in_proto217 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_IDENT_in_proto219 = new BitSet(new long[]{0x0000000000004008L});
+	public static final BitSet FOLLOW_INT_KW_in_type243 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_VOID_KW_in_type254 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_PARAM_in_param_list285 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_param_in_param_list290 = new BitSet(new long[]{0x0000000000004008L});
+	public static final BitSet FOLLOW_IDENT_in_param333 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_ASSIGN_KW_in_statement364 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_statement368 = new BitSet(new long[]{0x0000000000004000L});
+	public static final BitSet FOLLOW_IDENT_in_statement373 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_RETURN_KW_in_statement395 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_statement399 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_PRINT_KW_in_statement416 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_print_list_in_statement420 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_READ_KW_in_statement437 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_read_list_in_statement441 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_IF_KW_in_statement458 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_statement462 = new BitSet(new long[]{0x00002210C4008020L});
+	public static final BitSet FOLLOW_statement_in_statement467 = new BitSet(new long[]{0x00002210C4008028L});
+	public static final BitSet FOLLOW_statement_in_statement473 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_WHILE_KW_in_statement493 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_statement497 = new BitSet(new long[]{0x00002210C4008020L});
+	public static final BitSet FOLLOW_statement_in_statement503 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_FCALL_S_in_statement521 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_IDENT_in_statement525 = new BitSet(new long[]{0x0000100002C14208L});
+	public static final BitSet FOLLOW_argument_list_in_statement529 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_block_in_statement548 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_BLOCK_in_block590 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_declaration_in_block594 = new BitSet(new long[]{0x0000400000000000L});
+	public static final BitSet FOLLOW_inst_list_in_block599 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_BLOCK_in_block616 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_inst_list_in_block620 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_ARELEM_in_array_elem654 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_IDENT_in_array_elem659 = new BitSet(new long[]{0x0000100002C14200L});
+	public static final BitSet FOLLOW_expression_in_array_elem663 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_INST_in_inst_list699 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_statement_in_inst_list704 = new BitSet(new long[]{0x00002210C4008028L});
+	public static final BitSet FOLLOW_PLUS_in_expression744 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_expression748 = new BitSet(new long[]{0x0000100002C14200L});
+	public static final BitSet FOLLOW_expression_in_expression753 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_MUL_in_expression768 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_expression772 = new BitSet(new long[]{0x0000100002C14200L});
+	public static final BitSet FOLLOW_expression_in_expression777 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_DIV_in_expression792 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_expression796 = new BitSet(new long[]{0x0000100002C14200L});
+	public static final BitSet FOLLOW_expression_in_expression801 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_MINUS_in_expression816 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_expression_in_expression820 = new BitSet(new long[]{0x0000100002C14200L});
+	public static final BitSet FOLLOW_expression_in_expression825 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_primary_in_expression842 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_INTEGER_in_primary869 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_IDENT_in_primary882 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_FCALL_in_primary899 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_IDENT_in_primary903 = new BitSet(new long[]{0x0000100002C14208L});
+	public static final BitSet FOLLOW_argument_list_in_primary908 = new BitSet(new long[]{0x0000000000000008L});
+	public static final BitSet FOLLOW_expression_in_argument_list958 = new BitSet(new long[]{0x0000100002C14202L});
+	public static final BitSet FOLLOW_print_item_in_print_list996 = new BitSet(new long[]{0x0000100202C14202L});
+	public static final BitSet FOLLOW_TEXT_in_print_item1037 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_expression_in_print_item1053 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_read_item_in_read_list1098 = new BitSet(new long[]{0x0000000000004002L});
+	public static final BitSet FOLLOW_IDENT_in_read_item1142 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_DECL_in_declaration1192 = new BitSet(new long[]{0x0000000000000004L});
+	public static final BitSet FOLLOW_decl_item_in_declaration1197 = new BitSet(new long[]{0x0000000000004008L});
+	public static final BitSet FOLLOW_IDENT_in_decl_item1240 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_IDENT_in_decl_item1255 = new BitSet(new long[]{0x0000000000010000L});
+	public static final BitSet FOLLOW_INTEGER_in_decl_item1259 = new BitSet(new long[]{0x0000000000000002L});
 }
