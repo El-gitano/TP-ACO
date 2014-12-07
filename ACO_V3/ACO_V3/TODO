@@ -1,0 +1,7 @@
+Ajouter le Logger
+Mettre à final les champs nécessaires
+Vérifier l'aspect non mutable des objets retournés par les différentes méthodes
+Tests de la v3
+Griser les boutons undo et redo quand nécessaire
+Choper les combinaisons clavier et effectuer les actions en conséquence OPTIONNEL
+Mettre à jour le diagramme de classe

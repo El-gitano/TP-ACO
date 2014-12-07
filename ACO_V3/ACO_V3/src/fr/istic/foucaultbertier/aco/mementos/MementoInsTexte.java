@@ -21,6 +21,12 @@ public final class MementoInsTexte extends MementoCommande{
 	public MementoInsTexte(MoteurEdition moteur, Enregistreur enregistreur, String texte){
 		
 		super(moteur, enregistreur);
+		
+		if(texte == null){
+			
+			throw new IllegalArgumentException("texte est à null");
+		}
+		
 		this.texte = texte;
 	}
 	
