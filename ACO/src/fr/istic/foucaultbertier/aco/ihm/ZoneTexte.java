@@ -35,7 +35,7 @@ public class ZoneTexte extends JTextArea {
 	
 	/**
 	 * Lance une commande CopierEnregsitrable
-	 * @see CopierEnregistrable
+	 * @see Copier
 	 */
 	@Override
 	public void copy(){
@@ -45,7 +45,7 @@ public class ZoneTexte extends JTextArea {
 	
 	/**
 	 * Lance une commande CouperEnregsitrable
-	 * @see CouperEnregistrable
+	 * @see Couper
 	 */
 	@Override
 	public void cut(){
@@ -55,7 +55,7 @@ public class ZoneTexte extends JTextArea {
 	
 	/**
 	 * Lance une commande CollerEnregsitrable
-	 * @see CollerEnregistrable
+	 * @see CollerE
 	 */
 	@Override
 	public void paste(){
