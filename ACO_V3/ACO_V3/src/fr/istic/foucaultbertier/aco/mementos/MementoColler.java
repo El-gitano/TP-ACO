@@ -1,5 +1,8 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
@@ -10,8 +13,11 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
  */
 public final class MementoColler extends MementoCommande{
 
-	public MementoColler(MoteurEdition moteur, Enregistreur enregsitreur){
+	private static final Logger LOGGER = LogManager.getLogger(MementoColler.class.getName());	
+	
+	public MementoColler(MoteurEdition moteur, Enregistreur enregistreur){
 		
-		super(moteur, enregsitreur);
+		super(moteur, enregistreur);
+		LOGGER.trace("Création d'un MementoColler");
 	}
 }

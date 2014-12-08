@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
-import fr.istic.foucaultbertier.aco.commandes.Selectionner;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.SelectionnerEnregistrable;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 import fr.istic.foucaultbertier.aco.moteur.Selection;

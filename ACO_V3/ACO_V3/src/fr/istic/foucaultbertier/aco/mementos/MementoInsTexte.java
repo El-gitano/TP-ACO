@@ -1,5 +1,8 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
@@ -10,6 +13,8 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
  */
 public final class MementoInsTexte extends MementoCommande{
 
+	private static final Logger LOGGER = LogManager.getLogger(MementoInsTexte.class.getName());	
+	
 	private String texte;
 	
 	/**
@@ -28,6 +33,8 @@ public final class MementoInsTexte extends MementoCommande{
 		}
 		
 		this.texte = texte;
+
+		LOGGER.trace("Création d'un MementoInsTexte");
 	}
 	
 	/**

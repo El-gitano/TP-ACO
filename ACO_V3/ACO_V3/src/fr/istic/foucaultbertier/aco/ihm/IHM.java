@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.AbstractDocument;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
+import fr.istic.foucaultbertier.aco.GestionnaireHisto;
 import fr.istic.foucaultbertier.aco.Observable;
 import fr.istic.foucaultbertier.aco.Observateur;
 import fr.istic.foucaultbertier.aco.commandes.Arreter;
@@ -63,15 +64,34 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	//Enregistreur des mementos des commandes enregistrables
 	private final Enregistreur enregistreur;
 	
-    public IHM(final MoteurEdition moteur, final Enregistreur enregistreur){
+    public IHM(final MoteurEdition moteur, final Enregistreur enregistreur, final GestionnaireHisto gestionnaireHisto){
 
+    	/* Préconditions */
+    	if(moteur == null){
+    		
+    		throw new IllegalArgumentException("moteur est à null");
+    	}
+    	
+
+    	if(enregistreur == null){
+    		
+    		throw new IllegalArgumentException("enregistreur est à null");
+    	}
+    	
+
+    	if(gestionnaireHisto == null){
+    		
+    		throw new IllegalArgumentException("gestionnaireHisto est à null");
+    	}
+    	
+    	/* Traitement */
     	this.moteur = moteur;
     	this.enregistreur = enregistreur;
     	
     	filtreModifs = new FiltreModifications(moteur, enregistreur);
     	listenerSelection = new ListenerSelection(moteur, enregistreur);
     	
-        zoneTexte = new JTextArea(15, 80);
+        zoneTexte = new ZoneTexte(15, 80, moteur, enregistreur);
         zoneTexte.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         zoneTexte.setFont(new Font("monospaced", Font.PLAIN, 14));
         zoneTexte.addCaretListener(listenerSelection);
@@ -93,11 +113,20 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         copier = new JButton();
         couper = new JButton();
         supprimer = new JButton();
-        enregistrer = new JButton();
-        jouer = new JButton();
-        stop = new JButton();
-        defaire = new JButton();
-        refaire = new JButton();
+        
+        enregistrer = new BoutonEnregistrer();
+        jouer = new BoutonJouer();
+        stop = new BoutonStop();
+        
+        enregistreur.ajouterObservateur((Observateur)enregistrer);
+        enregistreur.ajouterObservateur((Observateur)jouer);
+        enregistreur.ajouterObservateur((Observateur)stop);
+        
+        defaire = new BoutonDefaire();
+        refaire = new BoutonRefaire();
+        
+        gestionnaireHisto.ajouterObservateur((Observateur)defaire);
+        gestionnaireHisto.ajouterObservateur((Observateur)refaire);
 
         //Association des icones aux boutons
         coller.setIcon(new ImageIcon(getClass().getResource("/icones/coller.png")));
@@ -161,7 +190,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         setContentPane(content);
         setJMenuBar(menuBar);
 
-        //Ajout des comportements par d�faut et des propriété propres à notre éditeur + Affichage
+        //Ajout des comportements par défaut et des propriété propres à notre éditeur + Affichage
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Editeur de texte v3 [BERTIER - FOUCAULT]");
         setLocationRelativeTo(null);
@@ -169,6 +198,9 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         pack();
     }
 
+    /**
+     * @see Observateur
+     */
 	@Override
 	public final void miseAJour(Observable o) {
 		
@@ -184,14 +216,14 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 			Buffer buffer = (Buffer) o;
 			
 			//On désactive le filtre pour éviter de renvoyer une commande
-			filtreModifs.desactiver();
+			filtreModifs.setReagir(false);
 			listenerSelection.setReagir(false);
 			
 			zoneTexte.setText(buffer.getContenu());
 			zoneTexte.setCaretPosition(buffer.getOffsetModif());
 			
 			listenerSelection.setReagir(true);
-			filtreModifs.activer();
+			filtreModifs.setReagir(true);
 		}
 	}
 
@@ -201,7 +233,6 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 		if (e.getSource()==coller){
 
 			new CollerEnregistrable(moteur, enregistreur).executer();
-
 		}
 		else if (e.getSource()==copier){
 
@@ -215,38 +246,19 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 
 			new SupTexteEnregistrable(moteur, enregistreur).executer();
 		}
-		
 		else if (e.getSource()==enregistrer){
-			
-			//Modifs liées à l'IHM
-			jouer.setEnabled(false);
-			enregistrer.setEnabled(false);
-			stop.setEnabled(true);
 			
 			new Demarrer(enregistreur).executer();
 		}
 		else if (e.getSource()==jouer){
 			
-			//Modifs liées à l'IHM
-			enregistrer.setEnabled(false);
-			jouer.setEnabled(false);
-			
 			new Rejouer(enregistreur).executer();
-
-			//Modifs liées à l'IHM
-			jouer.setEnabled(true);
-			enregistrer.setEnabled(true);
 		}
 		else if (e.getSource()==stop){
 			
 			new Arreter(enregistreur).executer();
-			
-			//Modifs liées à l'IHM
-			enregistrer.setEnabled(true);
-			stop.setEnabled(false);
-			jouer.setEnabled(true);
 		}
-		else if (e.getSource()==defaire){
+		else if(e.getSource()==defaire){
 			
 			new Defaire(moteur).executer();
 		}

@@ -1,5 +1,8 @@
 package fr.istic.foucaultbertier.aco.commandes;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.Enregistreur;
 
 /**
@@ -8,6 +11,8 @@ import fr.istic.foucaultbertier.aco.Enregistreur;
  */
 public class Demarrer implements Commande {
 
+	private static final Logger LOGGER = LogManager.getLogger(Demarrer.class.getName());	
+	
 	private Enregistreur enregistreur;
 	
 	/**
@@ -30,6 +35,7 @@ public class Demarrer implements Commande {
 	@Override
 	public void executer() {
 		
+		LOGGER.trace("Exécution d'une commande Demarrer");
 		enregistreur.activer();
 	}
 }

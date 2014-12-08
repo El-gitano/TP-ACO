@@ -1,5 +1,8 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Cette classe stocke toutes les informations nécessaires pour le restaurer par la suite. C'est à dire l'état du Buffer et celui de la Selection.
  * @see MementoBuffer
@@ -7,6 +10,8 @@ package fr.istic.foucaultbertier.aco.mementos;
  */
 public class MementoSysteme {
 
+	private static final Logger LOGGER = LogManager.getLogger(MementoSysteme.class.getName());	
+	
 	private MementoBuffer memBuffer;
 	private MementoSelection memSelection;
 	
@@ -29,6 +34,8 @@ public class MementoSysteme {
 
 		this.memBuffer = memBuffer;
 		this.memSelection = memSelection;
+		
+		LOGGER.trace("Création d'un MementoSysteme");
 	}
 	
 	/**

@@ -1,11 +1,16 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Ce memento est chargé de sauvegarder/restaurer l'état d'un objet Selection
  * @see Selection
  */
 public class MementoSelection {
 
+	private static final Logger LOGGER = LogManager.getLogger(MementoSelection.class.getName());	
+	
 	private int debut;
 	private int fin;
 	
@@ -32,6 +37,8 @@ public class MementoSelection {
 		
 		this.debut = debut;
 		this.fin = fin;
+		
+		LOGGER.trace("Création d'un MementoSelection");
 	}
 	
 	/**

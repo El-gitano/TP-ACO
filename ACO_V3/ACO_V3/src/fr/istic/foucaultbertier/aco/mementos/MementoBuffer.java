@@ -1,11 +1,16 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Cette classe est chargée de stocker et restituer l'état d'un objet Buffer
  * @see Buffer
  */
 public class MementoBuffer {
 
+	private static final Logger LOGGER = LogManager.getLogger(MementoBuffer.class.getName());	
+	
 	private StringBuffer contenu;
 	private int offsetModif;
 	
@@ -26,6 +31,7 @@ public class MementoBuffer {
 			throw new IllegalArgumentException("offsetModif est négatif");
 		}
 
+		LOGGER.trace("Création d'un MementoBuffer");
 		this.contenu = contenu;
 		this.offsetModif = offsetModif;
 	}
@@ -53,11 +59,19 @@ public class MementoBuffer {
 		this.contenu = contenu;
 	}
 	
+	/**
+	 * Restitue l'attribut offsetModif du memento
+	 * @return La position du curseur après la modification réalisée avant la sauvegarde du Buffer
+	 */
 	public int getOffModif(){
 		
 		return offsetModif;
 	}
 	
+	/**
+	 * Stocke l'attribut offsetModif du buffer
+	 * @param offsetModif La position du curseur
+	 */
 	public void setOffModif(int offsetModif){
 		
 		if(offsetModif<0){

@@ -1,5 +1,7 @@
 package fr.istic.foucaultbertier.aco;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import fr.istic.foucaultbertier.aco.ihm.IHM;
 import fr.istic.foucaultbertier.aco.moteur.MoteurImplementation;
 
@@ -8,12 +10,20 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurImplementation;
  */
 public final class ClientEditeur
 {
+	private static final Logger LOGGER = LogManager.getLogger(ClientEditeur.class.getName());	
+	
 	public static void main(String[] args) {
 		
-		final MoteurImplementation moteur = new MoteurImplementation();
 		final Enregistreur enregistreur = new Enregistreur();
-		final IHM ihm = new IHM(moteur, enregistreur);
+		final GestionnaireHisto gestionnaireHisto = new GestionnaireHisto();
+		final MoteurImplementation moteur = new MoteurImplementation();
+		
+		final IHM ihm = new IHM(moteur, enregistreur, gestionnaireHisto);
+		
 		moteur.getBuffer().ajouterObservateur(ihm);
+		moteur.setHistorique(gestionnaireHisto);
+		
+		LOGGER.trace("Mise en place des différents éléments de l'application effectué, prêt à l'utilisation !");
 	}
 }
 

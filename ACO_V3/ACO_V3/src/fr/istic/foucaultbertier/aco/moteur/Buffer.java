@@ -165,6 +165,11 @@ public final class Buffer implements Observable
 			throw new IllegalArgumentException("selection est à null");
 		}
 		
+		if(listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o est déjà dans la liste des observateurs");
+		}
+		
 		listeObservateurs.add(o);
 	}
 	
@@ -179,6 +184,11 @@ public final class Buffer implements Observable
 			throw new IllegalArgumentException("selection est à null");
 		}
 		
+		if(!listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o n'est pas dans la liste des observateurs");
+		}
+
 		listeObservateurs.remove(o);
 	}
 	

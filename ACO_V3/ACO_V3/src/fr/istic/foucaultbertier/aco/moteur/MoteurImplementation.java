@@ -1,5 +1,6 @@
 package fr.istic.foucaultbertier.aco.moteur;
 
+import fr.istic.foucaultbertier.aco.GestionnaireHisto;
 import fr.istic.foucaultbertier.aco.mementos.MementoSysteme;
 
 
@@ -13,7 +14,7 @@ public final class MoteurImplementation implements MoteurEdition
 	private final Selection selection;
 	private final Buffer buffer;
 	private final PressePapier pressePapier;
-	private final GestionnaireHisto historique;
+	private GestionnaireHisto historique;
 	
 	/**
 	 * Instancie l'ensemble des objets nécessaires à la mise en oeuvre d'un moteur d'édition
@@ -23,9 +24,6 @@ public final class MoteurImplementation implements MoteurEdition
 		selection = new Selection(0, 0);
 		buffer = new Buffer();
 		pressePapier = new PressePapier();
-		
-		historique = new GestionnaireHisto();
-		sauvegarderEtat();
 	}
 
 	/**
@@ -49,7 +47,10 @@ public final class MoteurImplementation implements MoteurEdition
 		if(!pressePapier.vide()){
 			
 			buffer.ajouterTexte(pressePapier.getContenu(), selection);
-			sauvegarderEtat();
+			
+			if(historique != null){
+				sauvegarderEtat();
+			}
 		}
 	}
 	
@@ -63,7 +64,10 @@ public final class MoteurImplementation implements MoteurEdition
 			
 			pressePapier.setContenu(buffer.getContenu(selection));
 			buffer.supprimerTexte(selection);
-			sauvegarderEtat();
+			
+			if(historique != null){
+				sauvegarderEtat();
+			}
 		}
 	}
 	
@@ -80,7 +84,10 @@ public final class MoteurImplementation implements MoteurEdition
 		}
 		
 		buffer.ajouterTexte(chaine, selection);
-		sauvegarderEtat();
+		
+		if(historique != null){
+			sauvegarderEtat();
+		}
 	}
 	
 	/**
@@ -118,7 +125,10 @@ public final class MoteurImplementation implements MoteurEdition
 	public final void supprimerTexte() {
 		
 		buffer.supprimerTexte(selection);
-		sauvegarderEtat();
+		
+		if(historique != null){
+			sauvegarderEtat();
+		}
 	}
 	
 	/**
@@ -135,9 +145,12 @@ public final class MoteurImplementation implements MoteurEdition
 	 */
 	public final void defaire(){
 		
-		MementoSysteme memSysteme = historique.defaire();
-		buffer.restaurer(memSysteme.getMemBuffer());
-		selection.restaurer(memSysteme.getMemSelection());
+		if(historique != null && historique.peutDefaire()){
+			
+			MementoSysteme memSysteme = historique.defaire();
+			buffer.restaurer(memSysteme.getMemBuffer());
+			selection.restaurer(memSysteme.getMemSelection());
+		}
 	}
 	
 	/**
@@ -145,7 +158,7 @@ public final class MoteurImplementation implements MoteurEdition
 	 */
 	public final void refaire(){
 		
-		if(historique.peutRefaire()){
+		if(historique != null && historique.peutRefaire()){
 			
 			MementoSysteme memSysteme = historique.refaire();
 			buffer.restaurer(memSysteme.getMemBuffer());
@@ -158,7 +171,25 @@ public final class MoteurImplementation implements MoteurEdition
 	 */
 	private final void sauvegarderEtat(){
 		
-		historique.ajouterElement(new MementoSysteme(buffer.getMemento(), selection.getMemento()));
+		if(historique != null){
+			
+			historique.ajouterElement(new MementoSysteme(buffer.getMemento(), selection.getMemento()));
+		}	
+	}
+	
+	/**
+	 * Permet de spécifier au moteur son gestionnaire d'historique
+	 * @param gestionnaireHisto Le gestionnaire d'historique (non-null)
+	 */
+	public final void setHistorique(GestionnaireHisto gestionnaireHisto){
+		
+		if(gestionnaireHisto == null){
+			
+			throw new IllegalArgumentException("gestionnaireHisto est à null");
+		}
+		
+		historique = gestionnaireHisto;
+		sauvegarderEtat();
 	}
 }
 

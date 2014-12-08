@@ -1,4 +1,7 @@
 package fr.istic.foucaultbertier.aco.commandes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
@@ -6,6 +9,9 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
  */
 public final class InsererTexte implements Commande
 {
+	
+	private static final Logger LOGGER = LogManager.getLogger(InsererTexte.class.getName());	
+	
 	/**
 	 * Moteur d'édition qui exécutera la commande
 	 */
@@ -47,6 +53,7 @@ public final class InsererTexte implements Commande
 	@Override
 	public final void executer() {
 		
+		LOGGER.trace("Exécution d'une commande InsererTexte");
 		moteur.insererTexte(chaine);
 	}
 }
