@@ -1,6 +1,5 @@
 package fr.istic.foucaultbertier.aco.moteur;
 
-
 /**
  * La classe MoteurImplementation représente une implémentation d'un moteur d'édition
  * @see MoteurEdition
@@ -28,7 +27,10 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void copier() {
 		
-		pressePapier.setContenu(buffer.getContenu(selection));
+		if(!selection.estVide()){
+			
+			pressePapier.setContenu(buffer.getContenu(selection));
+		}
 	}
 	
 	/**
@@ -37,7 +39,10 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void coller() {
 		
-		buffer.ajouterTexte(pressePapier.getContenu(), selection);
+		if(!pressePapier.vide()){
+			
+			buffer.ajouterTexte(pressePapier.getContenu(), selection);
+		}
 	}
 	
 	/**
@@ -46,10 +51,9 @@ public final class MoteurImplementation implements MoteurEdition
 	@Override
 	public final void couper() {
 		
-		pressePapier.setContenu(buffer.getContenu(selection));
-		
 		if(!selection.estVide()){
 			
+			pressePapier.setContenu(buffer.getContenu(selection));
 			buffer.supprimerTexte(selection);
 		}
 	}

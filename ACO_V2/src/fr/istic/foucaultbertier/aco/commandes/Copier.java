@@ -1,4 +1,7 @@
 package fr.istic.foucaultbertier.aco.commandes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
@@ -6,6 +9,7 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
  */
 public final class Copier implements Commande
 {
+	private static final Logger LOGGER = LogManager.getLogger(Copier.class.getName());	
 	
 	/**
 	 * Moteur d'édition qui exécutera la commande
@@ -34,6 +38,7 @@ public final class Copier implements Commande
 	@Override
 	public final void executer() {
 		
+		LOGGER.trace("On execute une commande Copier");
 		moteur.copier();
 	}
 }

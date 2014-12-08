@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
-import fr.istic.foucaultbertier.aco.commandes.Selectionner;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.SelectionnerEnregistrable;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 import fr.istic.foucaultbertier.aco.moteur.Selection;
@@ -18,6 +17,7 @@ import fr.istic.foucaultbertier.aco.moteur.Selection;
 public final class ListenerSelection implements CaretListener
 {
 	private static final Logger LOGGER = LogManager.getLogger(ListenerSelection.class.getName());
+	private boolean reagir;
 	
 	/**
 	 * Le moteur d'édition à renseigner pour les commandes
@@ -28,7 +28,6 @@ public final class ListenerSelection implements CaretListener
 	 * L'enregistreur pour les commandes enregistrables
 	 */
 	private final Enregistreur enregistreur;
-	private boolean enregistrer;
 	
 	/**
 	 * Le constructeur a besoin de savoir quel moteur d'édition spécifier à la commande Selectionner
@@ -47,7 +46,7 @@ public final class ListenerSelection implements CaretListener
 
 		this.moteur = moteur;
 		this.enregistreur = enregistreur;
-		enregistrer = false;
+		reagir = true;
 	}
 
 	/**
@@ -62,22 +61,19 @@ public final class ListenerSelection implements CaretListener
 		final int max = Math.max(e.getDot(), e.getMark()); 
 		
 		LOGGER.debug("Nouvelle sélection : [" + min + ", " + max + "]");
-		if(!enregistrer){
-			
-			new Selectionner(moteur, new Selection(min, max)).executer();
-		}
-		else{
+
+		if(reagir){
 			
 			new SelectionnerEnregistrable(moteur, enregistreur, new Selection(min, max)).executer();
 		}
 	}
-
+	
 	/**
-	 * Change le booleen décrivant si on doit executer des commandes enregistrables ou non
-	 * @param b
+	 * Indique au listener s'il doit ou non lancer une commande lorsqu'il est notifié
+	 * @param reagir Un booleen spécifiant s'il faut ou non réagir aux évènements reçus
 	 */
-	public void setEnregistrer(boolean b){
+	public void setReagir(boolean reagir){
 		
-		enregistrer = b;
+		this.reagir = reagir;
 	}
 }

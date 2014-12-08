@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
-import fr.istic.foucaultbertier.aco.commandes.InsererTexte;
-import fr.istic.foucaultbertier.aco.commandes.SupprimerTexte;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.InsTexteEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.SupTexteEnregistrable;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
@@ -27,12 +25,11 @@ public final class FiltreModifications extends DocumentFilter {
 	private final Enregistreur enregistreur;
 	
 	private boolean reagir;
-	private boolean enregistrer;
 	
 	/**
 	 * Le constructeur a besoin de savoir quel moteur d'édition spécifier aux commandes
 	 * @param moteur	Le Moteur d'édition à renseigner pour les commandes (non null)
-	 * @param enregistreur L'enregsitreur de commandes (non null)
+	 * @param enregistreur L'enregistreur de commandes (non null)
 	 */
 	public FiltreModifications(MoteurEdition moteur, Enregistreur enregistreur){
 		
@@ -52,7 +49,6 @@ public final class FiltreModifications extends DocumentFilter {
 		this.enregistreur = enregistreur;
 		
 		reagir = true;
-		enregistrer = false;
 	}
 
 	@Override
@@ -67,14 +63,7 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		if(reagir){
 			
-			if(!enregistrer){
-				
-				new InsererTexte(moteur, string).executer();
-			}
-			else{
-				
-				new InsTexteEnregistrable(moteur, enregistreur, string).executer();
-			}
+			new InsTexteEnregistrable(moteur, enregistreur, string).executer();
 		}
 		else{
 			
@@ -94,15 +83,8 @@ public final class FiltreModifications extends DocumentFilter {
 		LOGGER.debug("Supression de la chaîne en position " + offset + " de longueur " + length);
 		
 		if(reagir){
-			
-			if(!enregistrer){
-				
-				new SupprimerTexte(moteur).executer();
-			}
-			else{
-				
-				new SupTexteEnregistrable(moteur, enregistreur).executer();
-			}
+
+			new SupTexteEnregistrable(moteur, enregistreur).executer();
 		}
 		else{
 			
@@ -124,14 +106,7 @@ public final class FiltreModifications extends DocumentFilter {
 		
 		if(reagir){
 			
-			if(!enregistrer){
-				
-				new InsererTexte(moteur, string).executer();
-			}
-			else{
-				
-				new InsTexteEnregistrable(moteur, enregistreur, string).executer();
-			}
+			new InsTexteEnregistrable(moteur, enregistreur, string).executer();
 		}
 		else{
 			
@@ -142,31 +117,11 @@ public final class FiltreModifications extends DocumentFilter {
 	}
 	
 	/**
-	 * Active les interceptions effectuées par ce filtre
-	 * Les modifications ne sont donc pas transmise à la JTextArea
+	 * Indique au filtre s'il doit ou non lancer une commande lorsqu'il est notifié
+	 * @param reagir Un booleen spécifiant s'il faut ou non réagir aux évènements reçus
 	 */
-	public void activer(){
+	public void setReagir(boolean reagir){
 		
-		LOGGER.debug("Activation du filtre modifications");
-		reagir = true;
-	}
-	
-	/**
-	 * Désactive les interceptions effectuées par ce filtre
-	 * Les modifications sont donc transmise à la JTextArea
-	 */
-	public void desactiver(){
-		
-		LOGGER.debug("Désactivation du filtre modifications");
-		reagir = false;
-	}
-	
-	/**
-	 * Change le booleen décrivant si on doit executer des commandes enregistrables ou non
-	 * @param b
-	 */
-	public void setEnregistrer(boolean b){
-		
-		enregistrer = b;
+		this.reagir = reagir;
 	}
 }

@@ -18,10 +18,9 @@ import javax.swing.text.AbstractDocument;
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.Observable;
 import fr.istic.foucaultbertier.aco.Observateur;
-import fr.istic.foucaultbertier.aco.commandes.Coller;
-import fr.istic.foucaultbertier.aco.commandes.Copier;
-import fr.istic.foucaultbertier.aco.commandes.Couper;
-import fr.istic.foucaultbertier.aco.commandes.SupprimerTexte;
+import fr.istic.foucaultbertier.aco.commandes.Arreter;
+import fr.istic.foucaultbertier.aco.commandes.Demarrer;
+import fr.istic.foucaultbertier.aco.commandes.Rejouer;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CollerEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CopierEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CouperEnregistrable;
@@ -46,9 +45,6 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	private final JButton enregistrer;
 	private final JButton jouer;
 	private final JButton stop;
-
-	//Booleen définissant si un enregistrement est en cours ou non
-	private boolean bEnreg;
 	
 	//Zone de texte
 	private final JTextArea zoneTexte;
@@ -65,13 +61,26 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	
     public IHM(final MoteurEdition moteur, final Enregistreur enregistreur){
 
+    	/* Préconditions */
+    	if(moteur == null){
+    		
+    		throw new IllegalArgumentException("moteur est à null");
+    	}
+    	
+
+    	if(enregistreur == null){
+    		
+    		throw new IllegalArgumentException("enregistreur est à null");
+    	}
+    	
+    	/* Traitement */
     	this.moteur = moteur;
     	this.enregistreur = enregistreur;
     	
     	filtreModifs = new FiltreModifications(moteur, enregistreur);
     	listenerSelection = new ListenerSelection(moteur, enregistreur);
     	
-        zoneTexte = new JTextArea(15, 80);
+        zoneTexte = new ZoneTexte(15, 80, moteur, enregistreur);
         zoneTexte.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         zoneTexte.setFont(new Font("monospaced", Font.PLAIN, 14));
         zoneTexte.addCaretListener(listenerSelection);
@@ -86,16 +95,21 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 
         //Création de la barre d'outils
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        menuBar.setBorder(BorderFactory.createEmptyBorder(1,1,1,0));
 
         //Instanciation des boutons
         coller = new JButton();
         copier = new JButton();
         couper = new JButton();
         supprimer = new JButton();
-        enregistrer = new JButton();
-        jouer = new JButton();
-        stop = new JButton();
+        
+        enregistrer = new BoutonEnregistrer();
+        jouer = new BoutonJouer();
+        stop = new BoutonStop();
+        
+        enregistreur.ajouterObservateur((Observateur)enregistrer);
+        enregistreur.ajouterObservateur((Observateur)jouer);
+        enregistreur.ajouterObservateur((Observateur)stop);
 
         //Association des icones aux boutons
         coller.setIcon(new ImageIcon(getClass().getResource("/icones/coller.png")));
@@ -105,7 +119,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         enregistrer.setIcon(new ImageIcon(getClass().getResource("/icones/rec.png")));
         jouer.setIcon(new ImageIcon(getClass().getResource("/icones/play.png")));
         stop.setIcon(new ImageIcon(getClass().getResource("/icones/stop.png")));
-
+        
         //Association des bulles d'aide
         coller.setToolTipText("Coller");
         copier.setToolTipText("Copier");
@@ -124,6 +138,14 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         jouer.addActionListener(this);
         stop.addActionListener(this);
 
+        coller.setFocusable(false);
+        copier.setFocusable(false);
+        couper.setFocusable(false);
+        supprimer.setFocusable(false);
+        enregistrer.setFocusable(false);
+        jouer.setFocusable(false);
+        stop.setFocusable(false);
+
         //Ajout des boutons à la barre d'outils
         menuBar.add(copier);
         menuBar.add(couper);
@@ -133,6 +155,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         menuBar.add(jouer);
         menuBar.add(stop);
 
+
         //On ne peut pas jouer une action dès le début
         stop.setEnabled(false);
         jouer.setEnabled(false);
@@ -141,14 +164,17 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         setContentPane(content);
         setJMenuBar(menuBar);
 
-        //Ajout des comportements par d�faut et des propriété propres à notre éditeur + Affichage
+        //Ajout des comportements par défaut et des propriété propres à notre éditeur + Affichage
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Editeur de texte v2 [BERTIER - FOUCAULT]");
+        setTitle("Editeur de texte v3 [BERTIER - FOUCAULT]");
         setLocationRelativeTo(null);
         setVisible(true);
         pack();
     }
 
+    /**
+     * @see Observateur
+     */
 	@Override
 	public final void miseAJour(Observable o) {
 		
@@ -164,12 +190,14 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 			Buffer buffer = (Buffer) o;
 			
 			//On désactive le filtre pour éviter de renvoyer une commande
-			filtreModifs.desactiver();
+			filtreModifs.setReagir(false);
+			listenerSelection.setReagir(false);
 			
 			zoneTexte.setText(buffer.getContenu());
 			zoneTexte.setCaretPosition(buffer.getOffsetModif());
 			
-			filtreModifs.activer();
+			listenerSelection.setReagir(true);
+			filtreModifs.setReagir(true);
 		}
 	}
 
@@ -177,75 +205,32 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	public final void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource()==coller){
-		
-			if(bEnreg){
-				
-				new CollerEnregistrable(moteur, enregistreur).executer();
-			}
-			else{
-				
-				new Coller(moteur).executer();
-			}
+
+			new CollerEnregistrable(moteur, enregistreur).executer();
 		}
 		else if (e.getSource()==copier){
-			
-			if(bEnreg){
-				
-				new CopierEnregistrable(moteur, enregistreur).executer();
-			}
-			else{
-				
-				new Copier(moteur).executer();
-			}
+
+			new CopierEnregistrable(moteur, enregistreur).executer();
 		}
 		else if (e.getSource()==couper){
-			
-			if(bEnreg){
-				
-				new CouperEnregistrable(moteur, enregistreur).executer();
-			}
-			else{
-				
-				new Couper(moteur).executer();
-			}
+
+			new CouperEnregistrable(moteur, enregistreur).executer();
 		}
 		else if (e.getSource()==supprimer){
-		
-			if(bEnreg){
-				
-				new SupTexteEnregistrable(moteur, enregistreur).executer();
-			}
-			else{
-				
-				new SupprimerTexte(moteur).executer();
-			}
+
+			new SupTexteEnregistrable(moteur, enregistreur).executer();
 		}
 		else if (e.getSource()==enregistrer){
 			
-			jouer.setEnabled(false);
-			enregistrer.setEnabled(false);
-			stop.setEnabled(true);
-			bEnreg = true;
-			filtreModifs.setEnregistrer(true);
-			listenerSelection.setEnregistrer(true);
-			enregistreur.nettoyer();
+			new Demarrer(enregistreur).executer();
 		}
 		else if (e.getSource()==jouer){
 			
-			enregistrer.setEnabled(false);
-			jouer.setEnabled(false);
-			enregistreur.rejouerCommandes();
-			jouer.setEnabled(true);
-			enregistrer.setEnabled(true);
+			new Rejouer(enregistreur).executer();
 		}
 		else if (e.getSource()==stop){
 			
-			bEnreg = false;
-			filtreModifs.setEnregistrer(false);
-			listenerSelection.setEnregistrer(false);
-			enregistrer.setEnabled(true);
-			stop.setEnabled(false);
-			jouer.setEnabled(true);
+			new Arreter(enregistreur).executer();
 		}
 	}
 }

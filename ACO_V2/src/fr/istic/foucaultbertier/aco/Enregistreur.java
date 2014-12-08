@@ -3,6 +3,9 @@ package fr.istic.foucaultbertier.aco;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CollerEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CommandeEnregistrable;
 import fr.istic.foucaultbertier.aco.commandes.enregistrables.CopierEnregistrable;
@@ -23,26 +26,47 @@ import fr.istic.foucaultbertier.aco.mementos.MementoSupprTexte;
  * @see CommandeEnregistrable
  * @see MementoCommande
  */
-public final class Enregistreur {
+public final class Enregistreur implements Observable {
 
-	List<MementoCommande> listeMementos;
+	private static final Logger LOGGER = LogManager.getLogger(Enregistreur.class.getName());	
+	
+	private List<MementoCommande> listeMementos;
+	private List<Observateur> listeObservateurs;
+	private boolean enregistrer;
 	
 	public Enregistreur(){
 		
 		//Compatibilité Java 6
 		listeMementos = new ArrayList<MementoCommande>();
+		listeObservateurs = new ArrayList<Observateur>();
+		enregistrer = false;
 	}
 	
 	/**
-	 * Vide la liste des mementos enregistrés par l'objet
+	 * Vide la liste des mementos enregistrés par l'objet et active l'enregsitrement
 	 */
-	public final void nettoyer(){
+	public final void activer(){
+		
+		LOGGER.trace("Activation de l'enregistrement");
 		
 		listeMementos.clear();
+		enregistrer = true;
+		notifierObservateurs();
 	}
 	
 	/**
-	 * Enregsitre le memento d'une commande
+	 * Désactive l'enregistrement des commandes
+	 */
+	public final void desactiver(){
+		
+		LOGGER.trace("Désactivation de l'enregistrement");
+		
+		enregistrer = false;
+		notifierObservateurs();
+	}
+	
+	/**
+	 * Enregistre le memento d'une commande
 	 * @param commande La commande enregistrable dont on souhaite sauvegarder l'état (non null)
 	 */
 	public final void enregistrer(CommandeEnregistrable commande){
@@ -52,10 +76,19 @@ public final class Enregistreur {
 			throw new IllegalArgumentException("commande est à null");
 		}
 		
-		listeMementos.add(commande.getMemento());
+		if(enregistrer){
+			
+			LOGGER.trace("Enregistrement d'une commande");
+			listeMementos.add(commande.getMemento());
+		}
 	}
 	
+	/**
+	 * Rejoue l'ensemble des commandes précédemment enregistrées en les restaurant à partir de leurs Memento
+	 */
 	public final void rejouerCommandes(){
+		
+		LOGGER.trace("Rejeu des commandes précedemment enregsitrées");
 		
 		for(MementoCommande m : listeMementos){
 			
@@ -84,5 +117,66 @@ public final class Enregistreur {
 				new SupTexteEnregistrable((MementoSupprTexte)m);
 			}
 		}
+	}
+
+	/**
+	 * @see Observable
+	 */
+	@Override
+	public void ajouterObservateur(Observateur o) {
+	
+		if(o == null){
+			
+			throw new IllegalArgumentException("o est à null");
+		}
+		
+		if(listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o est déjà dans la liste des observateurs");
+		}
+		
+		listeObservateurs.add(o);
+	}
+
+	/**
+	 * @see Observable
+	 */
+	@Override
+	public void notifierObservateurs() {
+
+		for(Observateur o : listeObservateurs){
+			
+			o.miseAJour(this);
+		}
+		
+	}
+
+	/**
+	 * @see Observable
+	 */
+	@Override
+	public void retirerObservateur(Observateur o) {
+		
+		if(o == null){
+			
+			throw new IllegalArgumentException("o est à null");
+		}
+		
+		if(!listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o n'est pas dans la liste des observateurs");
+		}
+		
+		listeObservateurs.remove(o);
+	}
+	
+	/**
+	 * @return Le statut de l'enregistreur :
+	 * 	-True : enregistre
+	 * 	-False : N'enregistre pas
+	 */
+	public boolean getEnregistrer(){
+		
+		return enregistrer;
 	}
 }
