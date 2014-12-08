@@ -2,6 +2,7 @@ package fr.istic.foucaultbertier.aco.commandes.enregistrables;
 
 import fr.istic.foucaultbertier.aco.commandes.Commande;
 import fr.istic.foucaultbertier.aco.mementos.MementoCommande;
+import fr.istic.foucaultbertier.aco.Enregistreur;
 
 /**
  * Cette interface est implémenté par les commandes enregistrables. De façon à sauvegarder et restaurer leurs état, le pattern MementoCommande est utilisé.

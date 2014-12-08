@@ -27,7 +27,6 @@ public final class FiltreModifications extends DocumentFilter {
 	/**
 	 * Le constructeur a besoin de savoir quel moteur d'édition spécifier aux commandes
 	 * @param moteur	Le Moteur d'édition à renseigner pour les commandes (non null)
-	 * @param enregistreur L'enregistreur de commandes (non null)
 	 */
 	public FiltreModifications(MoteurEdition moteur){
 		

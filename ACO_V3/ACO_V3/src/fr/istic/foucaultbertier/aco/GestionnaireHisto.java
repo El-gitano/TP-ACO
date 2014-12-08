@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.istic.foucaultbertier.aco.mementos.MementoSysteme;
+import fr.istic.foucaultbertier.aco.commandes.Defaire;
+import fr.istic.foucaultbertier.aco.commandes.Refaire;
 
 /**
  * Cette classe est chargée de gérer les actions défaire/refaire lorsque l'utilisateur les demandent au travers des commandes portant le même nom

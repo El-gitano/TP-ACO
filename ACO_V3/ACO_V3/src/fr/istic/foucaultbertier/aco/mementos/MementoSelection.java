@@ -2,6 +2,7 @@ package fr.istic.foucaultbertier.aco.mementos;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import fr.istic.foucaultbertier.aco.moteur.Selection;
 
 /**
  * Ce memento est chargé de sauvegarder/restaurer l'état d'un objet Selection

@@ -2,11 +2,11 @@
   
   <modelVersion>4.0.0</modelVersion>
   <groupId>ACO</groupId>
-  <artifactId>ACOv2</artifactId>
+  <artifactId>ACOv3</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
-  <name>EditeurV2</name>
-  <description>Version 2 de l'éditeur de texte</description>
+  <name>EditeurV3</name>
+  <description>Version 3 de l'éditeur de texte</description>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>

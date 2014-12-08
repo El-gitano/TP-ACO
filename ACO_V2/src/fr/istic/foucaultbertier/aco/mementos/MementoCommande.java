@@ -2,6 +2,7 @@ package fr.istic.foucaultbertier.aco.mementos;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CommandeEnregistrable;
 
 /**
  * La classe MementoCommande sert à stocker l'état des commandes enregistrables.

@@ -1,5 +1,6 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CouperEnregistrable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

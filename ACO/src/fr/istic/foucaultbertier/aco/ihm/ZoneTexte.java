@@ -19,7 +19,6 @@ public class ZoneTexte extends JTextArea {
 	/**
 	 * Crée la zone de texte
 	 * @param moteur Le moteur d'edition auquel adresser les commandes
-	 * @param enregistreur L'enregistreur auquel adresser les commandes enregsitrables
 	 */
 	public ZoneTexte(int hauteur, int largeur, MoteurEdition moteur){
 		
@@ -55,7 +54,7 @@ public class ZoneTexte extends JTextArea {
 	
 	/**
 	 * Lance une commande CollerEnregsitrable
-	 * @see CollerE
+	 * @see Coller
 	 */
 	@Override
 	public void paste(){

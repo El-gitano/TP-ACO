@@ -2,6 +2,7 @@ package fr.istic.foucaultbertier.aco.mementos;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CollerEnregistrable;
 
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;

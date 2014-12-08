@@ -1,5 +1,6 @@
 package fr.istic.foucaultbertier.aco.mementos;
 
+import fr.istic.foucaultbertier.aco.commandes.enregistrables.CommandeEnregistrable;
 import fr.istic.foucaultbertier.aco.Enregistreur;
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
