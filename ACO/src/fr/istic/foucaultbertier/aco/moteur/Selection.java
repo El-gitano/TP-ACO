@@ -1,6 +1,5 @@
 package fr.istic.foucaultbertier.aco.moteur;
 
-
 /**
  * La classe Selection représente la sélection de l'utilisateur.
  */

@@ -16,6 +16,7 @@ import fr.istic.foucaultbertier.aco.moteur.Selection;
 public final class ListenerSelection implements CaretListener
 {
 	private static final Logger LOGGER = LogManager.getLogger(ListenerSelection.class.getName());
+	private boolean reagir;
 	
 	/**
 	 * Le moteur d'édition à renseigner pour les commandes
@@ -30,10 +31,11 @@ public final class ListenerSelection implements CaretListener
 		
 		if(moteur == null){
 			
-			throw new IllegalArgumentException("moteur est � null");
+			throw new IllegalArgumentException("moteur est à null");
 		}
-		
+
 		this.moteur = moteur;
+		reagir = true;
 	}
 
 	/**
@@ -48,7 +50,19 @@ public final class ListenerSelection implements CaretListener
 		final int max = Math.max(e.getDot(), e.getMark()); 
 		
 		LOGGER.debug("Nouvelle sélection : [" + min + ", " + max + "]");
-		new Selectionner(moteur, new Selection(min, max)).executer();
-	}
 
+		if(reagir){
+			
+			new Selectionner(moteur, new Selection(min, max)).executer();
+		}
+	}
+	
+	/**
+	 * Indique au listener s'il doit ou non lancer une commande lorsqu'il est notifié
+	 * @param reagir Un booleen spécifiant s'il faut ou non réagir aux évènements reçus
+	 */
+	public void setReagir(boolean reagir){
+		
+		this.reagir = reagir;
+	}
 }

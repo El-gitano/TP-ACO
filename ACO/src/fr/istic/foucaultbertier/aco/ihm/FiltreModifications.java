@@ -21,11 +21,13 @@ public final class FiltreModifications extends DocumentFilter {
 	private static final Logger LOGGER = LogManager.getLogger(FiltreModifications.class.getName());	
 	
 	private final MoteurEdition moteur;
+	
 	private boolean reagir;
 	
 	/**
 	 * Le constructeur a besoin de savoir quel moteur d'édition spécifier aux commandes
 	 * @param moteur	Le Moteur d'édition à renseigner pour les commandes (non null)
+	 * @param enregistreur L'enregistreur de commandes (non null)
 	 */
 	public FiltreModifications(MoteurEdition moteur){
 		
@@ -37,6 +39,7 @@ public final class FiltreModifications extends DocumentFilter {
 		}
 		
 		this.moteur = moteur;
+		
 		reagir = true;
 	}
 
@@ -72,7 +75,7 @@ public final class FiltreModifications extends DocumentFilter {
 		LOGGER.debug("Supression de la chaîne en position " + offset + " de longueur " + length);
 		
 		if(reagir){
-			
+
 			new SupprimerTexte(moteur).executer();
 		}
 		else{
@@ -106,22 +109,11 @@ public final class FiltreModifications extends DocumentFilter {
 	}
 	
 	/**
-	 * Active les interceptions effectuées par ce filtre
-	 * Les modifications ne sont donc pas transmise à la JTextArea
+	 * Indique au filtre s'il doit ou non lancer une commande lorsqu'il est notifié
+	 * @param reagir Un booleen spécifiant s'il faut ou non réagir aux évènements reçus
 	 */
-	public void activer(){
+	public void setReagir(boolean reagir){
 		
-		LOGGER.debug("Activation du filtre modifications");
-		reagir = true;
-	}
-	
-	/**
-	 * Désactive les interceptions effectuées par ce filtre
-	 * Les modifications sont donc transmise à la JTextArea
-	 */
-	public void desactiver(){
-		
-		LOGGER.debug("Désactivation du filtre modifications");
-		reagir = false;
+		this.reagir = reagir;
 	}
 }

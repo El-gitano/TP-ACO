@@ -28,7 +28,7 @@ public final class Buffer implements Observable
 	/**
 	 * Un objet de la classe StringBuffer est utilisé pour ses méthodes d'insertions/suppressions pratiques
 	 */
-	private final StringBuffer contenu;
+	private StringBuffer contenu;
 	
 	/**
 	 * Cet entier décrit la nouvelle position du curseur suite à la modification
@@ -113,6 +113,14 @@ public final class Buffer implements Observable
 	}
 	
 	/**
+	 * Renseigne l'indice max. pour l'objet Selection
+	 * @return L'indice max. utilisable dans la sélection
+	 */
+	public int getSelMax(){
+		
+		return contenu.length();
+	}
+	/**
 	 * Récupère le contenu du buffer spécifié par la sélection passée en paramètre
 	 * @param selection La sélection souhaitée (non null)
 	 * @return La chaîne du buffer représentée par la sélection
@@ -156,6 +164,11 @@ public final class Buffer implements Observable
 			throw new IllegalArgumentException("selection est à null");
 		}
 		
+		if(listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o est déjà dans la liste des observateurs");
+		}
+		
 		listeObservateurs.add(o);
 	}
 	
@@ -170,6 +183,11 @@ public final class Buffer implements Observable
 			throw new IllegalArgumentException("selection est à null");
 		}
 		
+		if(!listeObservateurs.contains(o)){
+			
+			throw new IllegalArgumentException("o n'est pas dans la liste des observateurs");
+		}
+
 		listeObservateurs.remove(o);
 	}
 	

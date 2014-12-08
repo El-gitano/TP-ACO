@@ -44,4 +44,12 @@ public final class PressePapier
 		//On crée une nouvelle instance de string pour assurer l'int�grit� de nos données
 		contenu = new String(chaine);
 	}
+	
+	/**
+	 * @return Vrai si le presse-papier est vide, faux sinon
+	 */
+	public boolean vide(){
+		
+		return contenu.isEmpty();
+	}
 }

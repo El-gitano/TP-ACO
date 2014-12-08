@@ -1,4 +1,7 @@
 package fr.istic.foucaultbertier.aco.commandes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 
 /**
@@ -6,6 +9,9 @@ import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
  */
 public final class SupprimerTexte implements Commande
 {
+	
+	private static final Logger LOGGER = LogManager.getLogger(SupprimerTexte.class.getName());	
+	
 	/**
 	 * Moteur d'édition qui exécutera la commande
 	 */
@@ -33,6 +39,7 @@ public final class SupprimerTexte implements Commande
 	@Override
 	public final void executer() {
 		
+		LOGGER.trace("Exécution d'une commande SupprimerTexte");
 		moteur.supprimerTexte();
 	}
 }

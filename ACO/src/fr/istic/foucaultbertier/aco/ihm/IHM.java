@@ -38,25 +38,35 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	private final JButton copier;
 	private final JButton couper;
 	private final JButton supprimer;
-
+	
 	//Zone de texte
 	private final JTextArea zoneTexte;
 
-	//Moteur d'�dition
+	//Moteur d'édition
 	private final MoteurEdition moteur;
 	
 	//Listener d'insertions
 	private final FiltreModifications filtreModifs;
+	private final ListenerSelection listenerSelection;
 	
     public IHM(final MoteurEdition moteur){
 
-    	this.moteur = moteur;
-    	filtreModifs = new FiltreModifications(moteur);
+    	/* Préconditions */
+    	if(moteur == null){
+    		
+    		throw new IllegalArgumentException("moteur est à null");
+    	}
     	
-        zoneTexte = new JTextArea(15, 80);
+    	/* Traitement */
+    	this.moteur = moteur;
+    	
+    	filtreModifs = new FiltreModifications(moteur);
+    	listenerSelection = new ListenerSelection(moteur);
+    	
+        zoneTexte = new ZoneTexte(15, 80, moteur);
         zoneTexte.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         zoneTexte.setFont(new Font("monospaced", Font.PLAIN, 14));
-        zoneTexte.addCaretListener(new ListenerSelection(moteur));
+        zoneTexte.addCaretListener(listenerSelection);
         ((AbstractDocument)zoneTexte.getDocument()).setDocumentFilter(filtreModifs);
         JScrollPane scrollingText = new JScrollPane(zoneTexte);
 
@@ -68,7 +78,7 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 
         //Création de la barre d'outils
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        menuBar.setBorder(BorderFactory.createEmptyBorder(1,1,1,0));
 
         //Instanciation des boutons
         coller = new JButton();
@@ -94,31 +104,39 @@ public final class IHM extends JFrame implements Observateur, ActionListener
         couper.addActionListener(this);
         supprimer.addActionListener(this);
 
+        coller.setFocusable(false);
+        copier.setFocusable(false);
+        couper.setFocusable(false);
+        supprimer.setFocusable(false);
+
         //Ajout des boutons à la barre d'outils
         menuBar.add(copier);
         menuBar.add(couper);
         menuBar.add(coller);
         menuBar.add(supprimer);
-
+        
         //Mise en place des éléments dans la fenêtre
         setContentPane(content);
         setJMenuBar(menuBar);
 
-        //Ajout des comportements par d�faut et des propriété propres à notre éditeur + Affichage
+        //Ajout des comportements par défaut et des propriété propres à notre éditeur + Affichage
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Editeur de texte v1 [BERTIER - FOUCAULT]");
+        setTitle("Editeur de texte v3 [BERTIER - FOUCAULT]");
         setLocationRelativeTo(null);
         setVisible(true);
         pack();
     }
 
+    /**
+     * @see Observateur
+     */
 	@Override
 	public final void miseAJour(Observable o) {
 		
-		/* Pr�conditions */
+		/* Préconditions */
 		if(o == null){
 			
-			throw new IllegalArgumentException("o est � null");
+			throw new IllegalArgumentException("o est à null");
 		}
 		
 		/* Traitement */
@@ -127,12 +145,14 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 			Buffer buffer = (Buffer) o;
 			
 			//On désactive le filtre pour éviter de renvoyer une commande
-			filtreModifs.desactiver();
+			filtreModifs.setReagir(false);
+			listenerSelection.setReagir(false);
 			
 			zoneTexte.setText(buffer.getContenu());
 			zoneTexte.setCaretPosition(buffer.getOffsetModif());
 			
-			filtreModifs.activer();
+			listenerSelection.setReagir(true);
+			filtreModifs.setReagir(true);
 		}
 	}
 
@@ -140,19 +160,19 @@ public final class IHM extends JFrame implements Observateur, ActionListener
 	public final void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource()==coller){
-		
+
 			new Coller(moteur).executer();
 		}
 		else if (e.getSource()==copier){
-		
+
 			new Copier(moteur).executer();
 		}
 		else if (e.getSource()==couper){
-		
+
 			new Couper(moteur).executer();
 		}
 		else if (e.getSource()==supprimer){
-		
+
 			new SupprimerTexte(moteur).executer();
 		}
 	}

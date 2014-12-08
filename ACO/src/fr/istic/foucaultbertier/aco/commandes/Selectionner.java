@@ -1,5 +1,8 @@
 package fr.istic.foucaultbertier.aco.commandes;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.istic.foucaultbertier.aco.moteur.MoteurEdition;
 import fr.istic.foucaultbertier.aco.moteur.Selection;
 
@@ -8,6 +11,7 @@ import fr.istic.foucaultbertier.aco.moteur.Selection;
  */
 public final class Selectionner implements Commande
 {
+	private static final Logger LOGGER = LogManager.getLogger(Selectionner.class.getName());	
 	
 	/**
 	 * Moteur d'édition qui exécutera la commande
@@ -50,6 +54,7 @@ public final class Selectionner implements Commande
 	@Override
 	public final void executer() {
 		
+		LOGGER.trace("Exécution d'une commande Selectionner");
 		moteur.selectionner(selection);
 	}
 }
