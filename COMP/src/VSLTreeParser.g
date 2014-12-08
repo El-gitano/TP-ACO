@@ -24,7 +24,6 @@ unit[SymbolTable symTab] returns [Code3a code]
 	c = function[symTab]
     {
 		code=c;    
-    
     }
     | proto[symTab]
     {
@@ -37,23 +36,25 @@ function [SymbolTable symTab] returns [Code3a code]
 	{
 		symTab.enterScope();
 	}
-	^(FUNC_KW t=type i=IDENT param_list[symTab] ^(BODY corps=statement[symTab]))
+	^(FUNC_KW t=type i=IDENT cParm=param_list[symTab] ^(BODY corps=statement[symTab]))
 	{
 		FunctionType fType = new FunctionType(t, false);
 		FunctionSymbol fs= TypeCheck.checkFuncDecl(i, i.getText(), fType,  symTab);
 		
 		code = Code3aGenerator.genBeginFunc(fs) ;
-		
+		code.append(cParm);
 		code.append(corps);
 		
 		code.append (Code3aGenerator.genEndFunc());
 		symTab.leaveScope();
+		
 	}
 	;
 proto [SymbolTable symTab] 
 	:
-	^(PROTO_KW t=type i=IDENT param_list[symTab])
+	^(PROTO_KW t=type i=IDENT ^(PARAM IDENT *))
 	{
+		// les parametres des prototypes ne doivent pas etre utilisé
 		FunctionType fType = new FunctionType(t, false);
 		FunctionSymbol ps= TypeCheck.checkProtoDecl(i, i.getText(), fType,symTab);
 		symTab.insert(i.getText(), ps);
@@ -81,7 +82,8 @@ param [SymbolTable symTab] returns [Code3a code]
     : i=IDENT
     {
     	VarSymbol vs = TypeCheck.checkAndDeclParmIdent(i,i.getText(),symTab);
-    	code = Code3aGenerator.genArg(vs) ;
+    	symTab.insert(i.getText(),vs);
+    	code = Code3aGenerator.genVar(vs) ;
     }
     ;
 
@@ -126,13 +128,13 @@ statement [SymbolTable symTab] returns [Code3a code]
     }
     | ^(WHILE_KW e=expression[symTab]  c=statement[symTab] )
     {
-    	code = Code3aGenerator.genWhile(e, c, symTab); 
+    	code = Code3aGenerator.genWhile(e, c, symTab);
     }
     | ^(FCALL_S i=IDENT c=argument_list[symTab]?)
     {
     	code = Code3aGenerator.genFuncCall(c, i.getText(), null, symTab);
     }
-    | c=block [symTab]
+    | c=block[symTab]
     {
     	code=c;
     }
@@ -148,7 +150,7 @@ block [SymbolTable symTab] returns [Code3a code]
     	
     	code=cDecl;
     	code.append(cInst);
-    	symTab.leaveScope();
+    	symTab.leaveScope(); 
 		
     }
     | ^(BLOCK c=inst_list[symTab])
@@ -219,28 +221,47 @@ expression [SymbolTable symTab] returns [ExpAttribute expAtt]
 
 
 primary [SymbolTable symTab] returns [ExpAttribute expAtt]
-  : INTEGER
+	: i=INTEGER
     {
-      ConstSymbol cs = new ConstSymbol(Integer.parseInt($INTEGER.text));
-      expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
-    }
-  | IDENT
+		ConstSymbol cs = new ConstSymbol(Integer.parseInt(i.getText()));
+		expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
+	}
+	| i=IDENT
     {
-      Operand3a id = symTab.lookup($IDENT.text);
-      expAtt = new ExpAttribute(id.type, new Code3a(), symTab.lookup($IDENT.text));
+      Operand3a id = symTab.lookup(i.getText());
+      if (id ==null){
+      	System.err.println("ERREUR: Variable " + i.getText() +" non presente dans la table de symbole");
+      	symTab.print();
+      	System.exit(1);
+      }
+      expAtt = new ExpAttribute(id.type, new Code3a(), symTab.lookup(i.getText()));
     }
+	| 
+	{
+		Code3a c = new Code3a();
+		Code3a cArg = new Code3a();
+	}
+	^(FCALL i=IDENT (ctmp=argument_list[symTab]
+	{
+		cArg.append(ctmp);
+	}  
+  	)? )
+	{ 	
+		
+		VarSymbol varRetour = SymbDistrib.newTemp();
+        c.append(Code3aGenerator.genFuncCall(cArg,i.getText(),varRetour,symTab) );
+        expAtt = new ExpAttribute(Type.INT, c, varRetour);
+	}
   ;
   
 argument_list[SymbolTable symTab] returns [Code3a code]
     : 
     {
 		code = new Code3a();
-		System.err.println("ERREUR: array_elem a faire");
-		System.exit(1);	
 	}
 	(e=expression[symTab]
 	{
-		
+		code.append(Code3aGenerator.genArg(e.place));
 	}
 	)+
 	;
@@ -320,32 +341,20 @@ declaration [SymbolTable symTab] returns [Code3a code]
 decl_item [SymbolTable symTab] returns [Code3a code]
     :  i=IDENT
     {
-    	
         VarSymbol  vs = TypeCheck.checkAndDeclIdent(i,i.getText(),Type.INT,symTab);
-    	
     	code = Code3aGenerator.genVar(vs);
-    	
     }
-   /* | i=IDENT cons=INTEGER
+   | i=IDENT cons=INTEGER
     {
-    	int s = symTab.getScope();
-    	Operand3a test= symTab.lookup(i.getText());
-    	 
-    	// test si deja presente dans la table des symboles	
-    	if(test != null ){
-    		// test du rang
-    		if (s == test.getScope()){
-        		System.err.println("ERREUR : Decalartion et affectation : Variable " + i.getText() + " deja presente dans la table des symboles");
-        		symTab.print();
-        		System.exit(1);
-        	}
-        }
-        VarSymbol  vs = new VarSymbol(Type.INT, i.getText(), s);
-        symTab.insert(i.getText(),vs);
+    	VarSymbol  vs = TypeCheck.checkAndDeclIdent(i,i.getText(),Type.INT,symTab);
+    	
     	code = Code3aGenerator.genVar(vs);
     	
-    	code.append(Code3aGenerator.genAffect( test,cons));
-    }*/
+    	Operand3a test  = symTab.lookup(i.getText());
+    	ConstSymbol cs = new ConstSymbol(Integer.parseInt(i.getText()));
+		ExpAttribute expAtt = new ExpAttribute(Type.INT, new Code3a(), cs);
+		code = Code3aGenerator.genAffect( test,expAtt);
+    }
     ;
 
 

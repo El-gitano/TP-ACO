@@ -37,18 +37,8 @@ public class Code3aGenerator {
 	}
 	
 	public static Code3a genArg(Operand3a t){
-		
 		Inst3a i = null;
-		
-		if(t.isVarInteger()){
-			
-			i = new Inst3a(Inst3a.TAC.VAR, t, null, null);
-		}
-		else if(t.isArray()){
-			
-			i = new Inst3a(Inst3a.TAC.VARTAB, t, null, null);
-		}
-		
+		i = new Inst3a(Inst3a.TAC.ARG, t, null, null);
 		return new Code3a(i);
 	}
 	
@@ -93,17 +83,29 @@ public class Code3aGenerator {
 		return code;
 	}
 
-	public static Code3a genFuncCall(Code3a c, String text, Operand3a op, SymbolTable symTab) {		
-		LabelSymbol retour = SymbDistrib.newLabel(); 
-		LabelSymbol la = (LabelSymbol) symTab.lookup(text);
-		c.append(new Inst3a(Inst3a.TAC.CALL, null, la, retour));
-		return c;
+	public static Code3a genFuncCall(Code3a arg, String name, Operand3a retour, SymbolTable symTab) {
+		Code3a code = new Code3a();
+		code.append(arg);
+		Operand3a f = symTab.lookup(name);
+		if (f==null){
+			System.err.println("ERREUR: fonction non presente dans la table des symboles");
+			symTab.print();
+			System.exit(1);
+		}
+		if (retour!=null){
+			retour.setOffset(f.getOffset());
+			code.append(new Inst3a(Inst3a.TAC.CALL, retour, f, null));
+		}
+		else{
+			code.append(new Inst3a(Inst3a.TAC.CALL, null, f, null));
+		}
+		return code;
 	}
 
-	public static Code3a genAffect(Operand3a test, ExpAttribute e) {
+	public static Code3a genAffect(Operand3a res, ExpAttribute e) {
 		Code3a code = e.code;
-		test.setOffset(e.place.getOffset());
-		code.append(new Inst3a(Inst3a.TAC.COPY,test, e.place,null ));
+		res.setOffset(e.place.getOffset());
+		code.append(new Inst3a(Inst3a.TAC.COPY,res, e.place,null ));
 		return code;
 	}
 
@@ -122,15 +124,23 @@ public class Code3aGenerator {
 
 	public static Code3a genIfThenElse(ExpAttribute e, Code3a cIf,Code3a cElse, SymbolTable symTab) {
 		Code3a code= e.code;
-		LabelSymbol labElse = SymbDistrib.newLabel();
-		LabelSymbol labFin = SymbDistrib.newLabel();											
+		LabelSymbol labFin = SymbDistrib.newLabel();
 		
-		code.append(new Inst3a(Inst3a.TAC.IFZ,e.place ,labElse ,null));
-		code.append(cIf);	
-		code.append(new Inst3a(Inst3a.TAC.GOTO,labFin ,null, null));
-		code.append(new Inst3a(Inst3a.TAC.LABEL,labElse ,null, null));
-		code.append(cElse);
-		code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
+		if (!cElse.isEmpty()){
+			LabelSymbol labElse = SymbDistrib.newLabel();
+			code.append(new Inst3a(Inst3a.TAC.IFZ,e.place ,labElse ,null));
+			code.append(cIf);	
+			code.append(new Inst3a(Inst3a.TAC.GOTO,labFin ,null, null));
+			code.append(new Inst3a(Inst3a.TAC.LABEL,labElse ,null, null));
+			code.append(cElse);
+			code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
+		}
+		else{
+			
+			code.append(new Inst3a(Inst3a.TAC.IFZ,e.place ,labFin ,null));
+			code.append(cIf);
+			code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
+		}
 		return code;
 	}
 
@@ -145,6 +155,7 @@ public class Code3aGenerator {
 		code.append(c);						
 		code.append(new Inst3a(Inst3a.TAC.GOTO,labDeb ,null, null));
 		code.append(new Inst3a(Inst3a.TAC.LABEL,labFin ,null, null));
+		
 		return code;
 	}
 	

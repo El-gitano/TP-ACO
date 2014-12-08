@@ -95,7 +95,7 @@ public class TypeCheck {
 		FunctionSymbol fs= new FunctionSymbol(new LabelSymbol(name),ft );
 		
 		// test si deja presente dans la table des symboles
-		FunctionSymbol test = (FunctionSymbol) symTab.lookup(name);
+		Operand3a test = symTab.lookup(name);
 		if (test != null) {
 			// fonction ou prototype presente dans la table des symboles
 			
@@ -128,12 +128,10 @@ public class TypeCheck {
 	}
 	public static FunctionSymbol checkProtoDecl(org.antlr.runtime.tree.CommonTree token, java.lang.String name, FunctionType ft, SymbolTable symTab){
 		FunctionSymbol ps= new FunctionSymbol(new LabelSymbol(name),ft );
-		
 		// test si deja presente dans la table des symboles
 		Operand3a test =  symTab.lookup(name);
 		if (test != null) {
 			// fonction ou prototype present dans la table des symboles
-			
 			// test si il s agit du meme type que dans la table des symboles
 			// par exemple la creation de la meme fonction , deux fois
 			if ( test.equals(ft.getReturnType() ) ){
